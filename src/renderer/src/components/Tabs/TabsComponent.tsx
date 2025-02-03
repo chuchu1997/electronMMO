@@ -9,16 +9,17 @@ export interface Tab {
 
 interface TabComponentProps extends ComponentProps<'div'> {
   tabs: Tab[]
+  name?: string
 }
 
-export const TabsComponent = ({ className, tabs, ...props }: TabComponentProps) => {
+export const TabsComponent = ({ className, tabs, name, ...props }: TabComponentProps) => {
   return (
     <div role="tablist" className={twMerge('tabs tabs-lifted', className)} {...props}>
       {tabs.map((tab, index) => (
         <React.Fragment key={index}>
           <input
             type="radio"
-            name="my_tabs_1"
+            name={name}
             role="tab"
             className="tab"
             aria-label={tab.title}
@@ -29,27 +30,6 @@ export const TabsComponent = ({ className, tabs, ...props }: TabComponentProps) 
           </div>
         </React.Fragment>
       ))}
-
-      {/* <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Tab 1" />
-      <div role="tabpanel" className="tab-content p-10">
-        Tab content 1
-      </div>
-      <input
-        type="radio"
-        name="my_tabs_1"
-        role="tab"
-        className="tab"
-        aria-label="Tab 2"
-        defaultChecked
-      />
-      <div role="tabpanel" className="tab-content p-10">
-        Tab content 2
-      </div>
-
-      <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Tab 3" />
-      <div role="tabpanel" className="tab-content p-10">
-        Tab content 3
-      </div> */}
     </div>
   )
 }

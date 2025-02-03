@@ -9,13 +9,18 @@ import { RootState } from 'src/types'
 function App(): JSX.Element {
   // const renderView = useSelector((state: any) => state.view)
   let renderView = useSelector((state: RootState) => {
-    if (state.currentView.view === 'dashboard') {
-      return <DashboardView />
+    switch (state.currentView.view) {
+      case 'dashboard':
+        return <DashboardView />
+      case 'create-profile':
+        return <CreateProfileChromeView />
+      case 'manage-proxy':
+        return <>THIS IS MANAGE PROXY</>
+      case 'manage-profile':
+        return <>THIS IS MANAGE PROFILE !!</>
+      default:
+        return <></>
     }
-    if (state.currentView.view === 'create-profile') {
-      return <CreateProfileChromeView />
-    }
-    return <></>
   })
   // const renderView = useSelector((state: RootState) => state.view)
 
@@ -25,7 +30,9 @@ function App(): JSX.Element {
       <DraggableTopBar className="" />
       <RootLayout className="">
         <SideBar className="p-2  text-black"></SideBar>
-        <Content className="border-l border-l-black/40 pt-[40px]">{renderView}</Content>
+        <Content className="border-l border-l-black/40 pt-[40px] text-red-500 p-4 ">
+          {renderView}
+        </Content>
       </RootLayout>
     </>
   )

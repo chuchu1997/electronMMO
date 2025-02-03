@@ -4,6 +4,7 @@ import { ActionButton, SidebarButton } from './Button'
 // import { chromesProfileMock } from '../store/mocks'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateView } from '../redux/actions'
+import { LuAArrowDown, LuNetwork, LuPlus, LuUser } from 'react-icons/lu'
 // import { setMessage, setView } from '../redux/actions'
 // import { StoreStateType } from '../redux/reducers'
 
@@ -29,16 +30,21 @@ export const SideBar = ({ className, ...props }: ComponentProps<'aside'>) => {
       <header className="p-4 mb-4">Nguyen Cuong Tool</header>
       <div className="flex flex-col gap-4 ">
         <SidebarButton
-          mode="create-profile"
-          onClick={() => {
-            handleChangeView('create-profile')
-          }}
+          title="Tạo mới profile"
+          icon={<LuPlus />}
+          onClick={() => handleChangeView('create-profile')}
         ></SidebarButton>
+
         <SidebarButton
-          mode="manage-profile"
-          onClick={() => {
-            handleChangeView('dashboard')
-          }}
+          title="Quản lý profile"
+          icon={<LuUser />}
+          onClick={() => handleChangeView('manage-profile')}
+        ></SidebarButton>
+
+        <SidebarButton
+          title="Quản lý proxy"
+          icon={<LuNetwork />}
+          onClick={() => handleChangeView('manage-proxy')}
         ></SidebarButton>
         <ActionButton
           onClick={() => {

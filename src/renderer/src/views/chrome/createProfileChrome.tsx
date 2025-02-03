@@ -42,7 +42,7 @@ export const CreateProfileChromeView = () => {
 
   return (
     <div className=" h-full flex text-black">
-      <div className="flex-1 h-full overflow-y-auto overflow-x-hidden flex flex-col gap-4 p-4">
+      <div className="flex-1 h-full overflow-y-auto overflow-x-hidden flex flex-col gap-4 ">
         <div>
           <div className="flex justify-between items-center top-menu">
             {/* ///TOP  */}
