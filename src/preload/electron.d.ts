@@ -9,6 +9,8 @@ declare global {
     }
     electron: {
       openChromeProfile: () => void
+      saveUserProfile: (userProfile: UserProfileType) => { success; message }
     }
   }
 }
+export {}

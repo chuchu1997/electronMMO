@@ -6,8 +6,9 @@ export type ManageView = {
 }
 
 export type ProxyType = {
-  proxyIP: string
-  port: number
+  proxyType: string
+  proxyIP?: string
+  port?: number
   username?: string
   password?: string
 }
@@ -29,4 +30,7 @@ export type UserProfileType = {
   clientRects: 'noise' | 'off'
   audioContext: 'noise' | 'off'
   fonts: 'noise' | 'off'
+  pathSave?: string
+  created?: string
+  updated?: string
 }

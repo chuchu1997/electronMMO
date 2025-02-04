@@ -1,10 +1,10 @@
 import clsx, { ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
-const dateFormatter = new Intl.DateTimeFormat(window.context.locale, {
+const dateFormatter = new Intl.DateTimeFormat('vi-VN', {
   dateStyle: 'short',
   timeStyle: 'short',
-  timeZone: 'UTC'
+  timeZone: 'Asia/Ho_Chi_Minh'
 })
 export const formatDateFromMS = (ms: number) => dateFormatter.format(ms)
 

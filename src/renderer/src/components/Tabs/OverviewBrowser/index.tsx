@@ -1,26 +1,9 @@
-import { useSelector, useDispatch } from 'react-redux'
-import { RootState, UserProfileType } from 'src/types'
 import { InputComponent } from '../../Input'
-import { useState, useEffect } from 'react'
-import { updateUserProfile } from '../../../redux/actions'
 import React from 'react'
 import { DropdownButton } from '../../DropdownButton'
 import { DropdownMenu } from '../../DropdownButton/DropdownMenu'
-
+import { useStoreCallback } from '../../../redux/callback'
 export const OverViewBrowser = () => {
-  const userAgentsGen = [
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36',
-    'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.115 Safari/537.36',
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.134 Safari/537.36',
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.101 Safari/537.36',
-    'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.5195.125 Safari/537.36',
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.5249.119 Safari/537.36',
-    'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.5304.107 Safari/537.36',
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.5359.95 Safari/537.36',
-    'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.5414.75 Safari/537.36',
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.5481.77 Safari/537.36'
-  ]
-
   const screenResolutions = ['125x125', '1024x768', '1920x1080']
 
   const versionChrome = () => {
@@ -32,54 +15,56 @@ export const OverViewBrowser = () => {
   }
   let chromeVersions: number[] = versionChrome()
 
-  const randomUserAgents = () => {
-    const randomIndex = Math.floor(Math.random() * userAgentsGen.length)
-    setUserBrowserProfile((prev) => ({
-      ...prev,
-      userAgent: userAgentsGen[randomIndex]
-    }))
-  }
-
-  const userProfile: UserProfileType = useSelector((state: RootState) => state.userProfile)
-  const [userBrowserProfile, setUserBrowserProfile] = useState(userProfile)
-  const dispatch = useDispatch()
+  const { userProfileSelector, onDispatchUpdateBrowserProfile, onRandomUserAgent } =
+    useStoreCallback()
 
   const handleInputChange = (event) => {
     const { name, value } = event.target
-    setUserBrowserProfile((prevState) => ({
-      ...prevState,
-      [name]: value // Cập nhật trường tương ứng
-    }))
+    onDispatchUpdateBrowserProfile({
+      ...userProfileSelector,
+      [name]: [value]
+    })
   }
-  const updateBrowserProfile = () => {
-    dispatch(updateUserProfile(userBrowserProfile))
-  }
+
   const changeChromeVersionFromUserAgent = (version: number) => {
-    if (userBrowserProfile.userAgent) {
+    if (userProfileSelector.userAgent) {
       const regex = /Chrome\/(\d+\.\d+\.\d+\.\d+)/
-      const match = userBrowserProfile.userAgent.match(regex)
+      const match = userProfileSelector.userAgent.match(regex)
 
       if (match) {
         const chromeVersion = match[1] // Lấy giá trị phiên bản từ nhóm trong biểu thức chính quy
         console.log('Chrome version:', chromeVersion) // In ra phiên bản Chrome
-        let newss = userBrowserProfile.userAgent.replace(
+        let newVersion = userProfileSelector.userAgent.replace(
           `Chrome/${chromeVersion}`,
           `Chrome/${version}.0.0.0`
         )
-        console.log('NEWS', newss)
-        setUserBrowserProfile((prevState) => ({
-          ...prevState,
-          userAgent: newss // Cập nhật trường tương ứng
-        }))
+
+        onDispatchUpdateBrowserProfile({
+          ...userProfileSelector,
+          userAgent: newVersion
+        })
       }
     }
   }
-  useEffect(() => {
-    // Lắng nghe nếu UserBrowserProfile Thay Đổi Tiến Hành UpDATE REDUX !!
-    if (userBrowserProfile) {
-      updateBrowserProfile()
+  const onHandleBtnDelay = (mode: 'plus' | 'sub') => {
+    switch (mode) {
+      case 'plus':
+        userProfileSelector.delayOpenSeconds++
+        onDispatchUpdateBrowserProfile({
+          ...userProfileSelector,
+          delayOpenSeconds: userProfileSelector.delayOpenSeconds
+        })
+        break
+
+      case 'sub':
+        if (userProfileSelector.delayOpenSeconds > 0) userProfileSelector.delayOpenSeconds--
+        onDispatchUpdateBrowserProfile({
+          ...userProfileSelector,
+          delayOpenSeconds: userProfileSelector.delayOpenSeconds
+        })
+        break
     }
-  }, [userBrowserProfile])
+  }
   return (
     <div className="flex flex-col gap-4">
       <section>
@@ -102,10 +87,10 @@ export const OverViewBrowser = () => {
         <InputComponent
           placeholder="userAgent"
           name="userAgent"
-          value={userBrowserProfile.userAgent}
+          value={userProfileSelector.userAgent}
           onChange={handleInputChange}
         />
-        <button className="btn btn-neutral absolute top-0 right-0" onClick={randomUserAgents}>
+        <button className="btn btn-neutral absolute top-0 right-0" onClick={onRandomUserAgent}>
           Random UserAgent
         </button>
       </section>
@@ -118,6 +103,10 @@ export const OverViewBrowser = () => {
                 return {
                   label: resolution.toString(),
                   onClick: () => {
+                    onDispatchUpdateBrowserProfile({
+                      ...userProfileSelector,
+                      screen: resolution
+                    })
                     // changeChromeVersionFromUserAgent(resolution)
                     //TODO:
                   }
@@ -130,20 +119,26 @@ export const OverViewBrowser = () => {
         <InputComponent
           placeholder="Start URL"
           name="startURL"
-          value={userBrowserProfile.startURL}
+          value={userProfileSelector.startURL}
           onChange={handleInputChange}
         />
 
         <div className="relative">
           <div className="absolute top-0 right-0 flex gap-1">
-            <button className="btn btn-neutral ">-</button>
-            <button className="btn btn-neutral ">+</button>
+            <button className="btn btn-neutral" onClick={() => onHandleBtnDelay('sub')}>
+              -
+            </button>
+            <button className="btn btn-neutral" onClick={() => onHandleBtnDelay('plus')}>
+              +
+            </button>
           </div>
 
           <InputComponent
             type="number"
             placeholder="Delay mở (seconds)"
-            name="startURL"
+            name="delayOpenSeconds"
+            value={userProfileSelector.delayOpenSeconds}
+            onChange={handleInputChange}
           ></InputComponent>
         </div>
       </section>

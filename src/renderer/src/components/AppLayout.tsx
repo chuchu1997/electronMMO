@@ -1,15 +1,8 @@
 import { ComponentProps, forwardRef } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { ActionButton, SidebarButton } from './Button'
-// import { chromesProfileMock } from '../store/mocks'
-import { useDispatch, useSelector } from 'react-redux'
-import { updateView } from '../redux/actions'
-import { LuAArrowDown, LuNetwork, LuPlus, LuUser } from 'react-icons/lu'
-// import { setMessage, setView } from '../redux/actions'
-// import { StoreStateType } from '../redux/reducers'
-
-// import { chromesProfileMock } from '@renderer/store/mocks'
-// import { cn, formatDateFromMS } from '@renderer/utils'
+import { LuNetwork, LuPlus, LuUser } from 'react-icons/lu'
+import { useStoreCallback } from '../redux/callback'
 
 export const RootLayout = ({ className, children, ...props }: ComponentProps<'main'>) => {
   return (
@@ -20,11 +13,8 @@ export const RootLayout = ({ className, children, ...props }: ComponentProps<'ma
 }
 
 export const SideBar = ({ className, ...props }: ComponentProps<'aside'>) => {
-  const dispatch = useDispatch()
+  const { onDispatchChangeView } = useStoreCallback()
 
-  const handleChangeView = (viewChange: any) => {
-    dispatch(updateView({ view: viewChange }))
-  }
   return (
     <aside className={twMerge('w-[200px] h-[100vh +10px] overflow-auto', className)} {...props}>
       <header className="p-4 mb-4">Nguyen Cuong Tool</header>
@@ -32,19 +22,19 @@ export const SideBar = ({ className, ...props }: ComponentProps<'aside'>) => {
         <SidebarButton
           title="Tạo mới profile"
           icon={<LuPlus />}
-          onClick={() => handleChangeView('create-profile')}
+          onClick={() => onDispatchChangeView('create-profile')}
         ></SidebarButton>
 
         <SidebarButton
           title="Quản lý profile"
           icon={<LuUser />}
-          onClick={() => handleChangeView('manage-profile')}
+          onClick={() => onDispatchChangeView('manage-profile')}
         ></SidebarButton>
 
         <SidebarButton
           title="Quản lý proxy"
           icon={<LuNetwork />}
-          onClick={() => handleChangeView('manage-proxy')}
+          onClick={() => onDispatchChangeView('manage-proxy')}
         ></SidebarButton>
         <ActionButton
           onClick={() => {

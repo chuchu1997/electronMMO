@@ -1,28 +1,13 @@
 import { ComponentProps } from 'react'
-import { useSelector } from 'react-redux'
-import { RootState, UserProfileType } from 'src/types'
+
+import { UserProfileType } from 'src/types'
 import { twMerge } from 'tailwind-merge'
-
+import { useStoreCallback } from '../../redux/callback'
 // type ChromeDetailType
-export interface ChromeDetailsType extends ComponentProps<'div'> {
-  profileName?: string
-  browser?: string
-  screenResolution?: string
-  webRTC?: string
-  OS?: string
-  userAgent?: string
-}
 
-export const ChromeDetails = ({
-  className,
-  profileName,
-  browser,
-  screenResolution,
-  OS,
-  userAgent,
-  ...props
-}: ChromeDetailsType) => {
-  const userBrowserProfile: UserProfileType = useSelector((state: RootState) => state.userProfile)
+export const ChromeDetails = ({ className, ...props }: ComponentProps<'div'>) => {
+  const { userProfileSelector } = useStoreCallback()
+  const userBrowserProfile: UserProfileType = userProfileSelector
 
   return (
     <div className={twMerge('flex flex-col gap-4 overflow-hidden', className)} {...props}>
@@ -31,21 +16,21 @@ export const ChromeDetails = ({
         <li>
           <div className="flex justify-between items-start gap-14 w-full ">
             <span>Tên Profile</span>
-            <span className="max-w-[100px] text-ellipsis">{profileName}</span>
+            <span className="max-w-[100px] text-ellipsis">{userBrowserProfile.profileName}</span>
           </div>
           <div className="divider"></div>
         </li>
         <li>
           <div className="flex justify-between items-start gap-14 w-full ">
             <span>Browser</span>
-            <span className="max-w-[100px] text-ellipsis">{browser}</span>
+            <span className="max-w-[100px] text-ellipsis">{userBrowserProfile.browser}</span>
           </div>
           <div className="divider"></div>
         </li>
         <li>
           <div className="flex justify-between items-start gap-14 w-full ">
             <span>OS</span>
-            <span>{OS}</span>
+            <span>{userBrowserProfile.os}</span>
           </div>
           <div className="divider"></div>
         </li>
@@ -59,14 +44,14 @@ export const ChromeDetails = ({
         <li>
           <div className="flex justify-between items-start gap-14 w-full ">
             <span>Tỉ lệ màn hình</span>
-            <span className="max-w-[100px] text-ellipsis">1920x1080</span>
+            <span className="max-w-[100px] text-ellipsis">{userBrowserProfile.screen}</span>
           </div>
           <div className="divider"></div>
         </li>
         <li>
           <div className="flex justify-between items-start gap-14 w-full ">
             <span>CPU</span>
-            <span className="max-w-[100px] text-ellipsis">1</span>
+            <span className="max-w-[100px] text-ellipsis">{userBrowserProfile.cpu}</span>
           </div>
           <div className="divider"></div>
         </li>
@@ -80,44 +65,31 @@ export const ChromeDetails = ({
         <li>
           <div className="flex justify-between items-start gap-14 w-full ">
             <span>Proxy</span>
-            <span className="max-w-[100px] text-ellipsis">1</span>
+            <span className="max-w-[100px] text-ellipsis">
+              {' '}
+              {userBrowserProfile.proxy?.proxyType ?? ''}{' '}
+            </span>
           </div>
           <div className="divider"></div>
         </li>
         <li>
           <div className="flex justify-between items-start gap-14 w-full ">
             <span>WEB RTC</span>
-            <span className="max-w-[100px] text-ellipsis">1</span>
+            <span className="max-w-[100px] text-ellipsis">{userBrowserProfile.webRTC}</span>
           </div>
           <div className="divider"></div>
         </li>
         <li>
           <div className="flex justify-between items-start gap-14 w-full ">
             <span>Timezone</span>
-            <span className="max-w-[100px] text-ellipsis">1</span>
+            <span className="max-w-[100px] text-ellipsis"> {userBrowserProfile.timeZone} </span>
           </div>
           <div className="divider"></div>
         </li>
         <li>
           <div className="flex justify-between items-start gap-14 w-full ">
             <span>Geolocation</span>
-            <span className="max-w-[100px] text-ellipsis">1</span>
-          </div>
-          <div className="divider"></div>
-        </li>
-
-        <li>
-          <div className="flex justify-between items-start gap-14 w-full ">
-            <span>WebGL</span>
-            <span className="max-w-[100px] text-ellipsis">1</span>
-          </div>
-          <div className="divider"></div>
-        </li>
-
-        <li>
-          <div className="flex justify-between items-start gap-14 w-full ">
-            <span>WebGL Vendor</span>
-            <span className="max-w-[100px] text-ellipsis">1</span>
+            <span className="max-w-[100px] text-ellipsis"> {userBrowserProfile.getlocation} </span>
           </div>
           <div className="divider"></div>
         </li>

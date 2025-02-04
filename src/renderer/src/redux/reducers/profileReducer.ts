@@ -1,5 +1,6 @@
-import { UserProfileType } from 'src/types'
+import { UserProfileType, ProxyType } from 'src/types'
 import { UPDATE_USER_PROFILE, CLEAR_USER_PROFILE } from '../actions/index'
+import { formatDateFromMS } from '../../utils'
 
 const initialProfileState: UserProfileType = {
   profileName: '',
@@ -8,8 +9,8 @@ const initialProfileState: UserProfileType = {
   version: 130,
   userAgent:
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36',
-  screen: '',
-  cpu: 8,
+  screen: '1920x1080',
+  cpu: 4,
   languages: 'vn',
   startURL: '',
   delayOpenSeconds: 0,
@@ -18,7 +19,15 @@ const initialProfileState: UserProfileType = {
   timeZone: '',
   clientRects: 'off',
   audioContext: 'off',
-  fonts: 'off'
+  fonts: 'off',
+  proxy: {
+    proxyType: 'HTTP Proxy',
+    proxyIP: '',
+    port: 0,
+    username: '',
+    password: ''
+  },
+  created: formatDateFromMS(Date.now())
 }
 
 const profileReducer = (state = initialProfileState, action) => {
