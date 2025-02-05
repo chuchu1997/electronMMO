@@ -41,16 +41,18 @@ export const CreateProfileChromeView = () => {
             <ActionButton
               className="w-[200px]"
               onClick={async () => {
-                // onResetBrowserProfile()
-                // CustomToast.success({
-                //   message: `Tạo Profile (${userProfileSelector.profileName}) Thành Công`
-                // })
+                console.log('USER PROFILE', userProfileSelector)
 
                 const result = await window.electron.saveUserProfile(userProfileSelector)
+                console.log('CALL NE')
                 if (result.success) {
                   CustomToast.success({ message: 'Tạo user profile thành công ' })
+
                   onResetBrowserProfile()
-                  onRandomUserAgent()
+                  setTimeout(() => {
+                    //ADD DELAY
+                    onRandomUserAgent()
+                  }, 1000)
                 } else {
                   CustomToast.error({ message: result.message })
                 }

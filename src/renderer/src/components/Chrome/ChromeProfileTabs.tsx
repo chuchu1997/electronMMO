@@ -11,7 +11,7 @@ import { InternetBrowser } from '../Tabs'
 
 export const ChromeCreateProfileTabs = ({ className, ...props }: ComponentProps<'div'>) => {
   const handleOPEN = async () => {
-    window.electron.openChromeProfile()
+    // window.electron.openChromeProfile()
   }
   return (
     <TabsComponent

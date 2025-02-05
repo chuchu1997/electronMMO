@@ -27,6 +27,7 @@ const initialProfileState: UserProfileType = {
     username: '',
     password: ''
   },
+  isRunning: false,
   created: formatDateFromMS(Date.now())
 }
 

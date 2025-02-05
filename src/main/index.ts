@@ -1,18 +1,34 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { OpenChromeWithMultipleProfile } from 'src/renderer/src/shared/types'
-import { openChromeWithMultipleProfiles } from './lib'
-import { Builder, Capabilities } from 'selenium-webdriver'
+import {
+  CloseChromeWithProfile,
+  OpenChromeWithMultipleProfile,
+  OpenChromeWithProfile,
+  SaveChromeProfile
+} from 'src/renderer/src/shared/types'
+import {
+  closeAllChromeProfile,
+  closeChromeProfile,
+  openChromeProfile,
+  WriteUserProfileToExcelFile
+} from './lib'
+import { Builder, Capabilities, WebDriver } from 'selenium-webdriver'
 import 'chromedriver'
 import { Options } from 'selenium-webdriver/chrome'
 import XLSX from 'xlsx'
 import path from 'path'
 import fs from 'fs'
 import { UserProfileType } from '../types'
-let listDriver = []
+import process from 'process'
+import { saveProfileChrome } from './lib/chromeHandler/chromeAction'
 
+interface CustomInterfaceDriver {
+  profileName: string
+  webDriver: WebDriver
+}
+let drivers: CustomInterfaceDriver[] = []
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -36,6 +52,23 @@ function createWindow(): void {
     }
   })
 
+  mainWindow.on('close', (event) => {
+    event.preventDefault()
+    dialog
+      .showMessageBox(mainWindow, {
+        type: 'question',
+        buttons: ['Yes', 'No'],
+        title: 'Confirm Exit',
+        message: 'Bạn muốn thoát chương trình ? (Chromes sẽ bị đóng tất cả )'
+      })
+      .then(async (result) => {
+        if (result.response === 0) {
+          await closeAllChromeProfile()
+
+          mainWindow.destroy()
+        }
+      })
+  })
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
@@ -74,35 +107,37 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('ping'))
 
-  async function openChromeProfile() {
-    try {
-      // const options = new Options()
-      // options.addArguments(
-      //   '--headless', // Chạy Chrome mà không có giao diện người dùng
-      //   '--disable-gpu', // Tắt GPU acceleration (nếu có)
-      //   '--no-sandbox', // Không sử dụng sandbox (chạy với quyền hạn cao)
-      //   '--incognito', // Chạy trình duyệt ở chế độ ẩn danh
-      //   '--start-maximized' // Khởi động Chrome ở chế độ cửa sổ lớn
-      // )
-      const options = new Options()
-      options.addArguments(
-        '--use-gl=swiftshader' // Sử dụng phần mềm SwiftShader thay vì phần cứng GPU
-      )
-      // const userAgent =
-      //   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-      // options.addArguments(`--user-agent=${userAgent}`)
-
-      // Tạo và khởi tạo trình điều khiển Selenium WebDriver cho Chrome
-      let driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build()
-
-      await driver.get('https://www.google.com')
-      await driver.wait(() => false)
-    } catch (err) {
-      console.log('Có lỗi xảy ra khi mở chrome !!')
-    }
-  }
-  ipcMain.handle('saveProxys', async (event, proxyInfo: any) => {
+  ipcMain.handle('saveProxys', async (_, proxyInfo: any) => {
     //HANDLE FOR PROXY !!!
+  })
+
+  ipcMain.handle('readChromeProfilesFromExcel', async () => {
+    let wb
+    let ws
+    const directoryPath = path.join(__dirname, '../../db')
+
+    if (!fs.existsSync(directoryPath)) {
+      fs.mkdirSync(directoryPath, { recursive: true })
+    }
+    const excelFilePath = path.join(directoryPath, 'information.xlsx')
+
+    try {
+      if (fs.existsSync(excelFilePath)) {
+        // Nếu file tồn tại, đọc file Excel hiện tại
+        wb = XLSX.readFile(excelFilePath)
+        ws = wb.Sheets['Profiles']
+        console.log('FILE EXCEL DA CO !!')
+      } else {
+        console.log('khongh co file !!')
+        return { profiles: null, status: 404 }
+      }
+
+      const data: UserProfileType[] = XLSX.utils.sheet_to_json(ws)
+
+      return { profiles: data, status: 200 }
+    } catch (err) {
+      return { profile: null, status: 404 }
+    }
   })
 
   async function saveChromeProfiles(userProfile: UserProfileType) {
@@ -121,86 +156,73 @@ app.whenReady().then(() => {
     }
     return profileDir
   }
-  ipcMain.handle('saveUserProfile', async (event, userProfile: UserProfileType) => {
-    let pathSave = await saveChromeProfiles(userProfile)
-    console.log('PATH SAVE', pathSave)
-    let wb
-    let ws
-    const directoryPath = path.join(__dirname, '../../db')
+  // ipcMain.handle(
+  //   'openChromeWithMultipleProfile',
+  //   (_, ...args: Parameters<OpenChromeWithMultipleProfile>) =>
+  //     openChromeWithMultipleProfiles(...args)
+  // )
 
-    if (!fs.existsSync(directoryPath)) {
-      fs.mkdirSync(directoryPath, { recursive: true })
-    }
-    const excelFilePath = path.join(directoryPath, 'information.xlsx')
+  ipcMain.handle('openChromeProfile', (_, ...args: Parameters<OpenChromeWithProfile>) =>
+    openChromeProfile(...args)
+  )
 
-    try {
-      if (fs.existsSync(excelFilePath)) {
-        // Nếu file tồn tại, đọc file Excel hiện tại
-        wb = XLSX.readFile(excelFilePath)
-        ws = wb.Sheets['Profiles']
-      } else {
-        // Nếu không tồn tại, tạo một workbook mới và thêm sheet 'Profiles'
-        wb = XLSX.utils.book_new()
-        // Tạo sheet với các header 'Name', 'Age', 'Status'
-        ws = XLSX.utils.json_to_sheet([
-          [
-            {
-              Name: 'User Profile (Gmail)',
-              Proxy: 'Proxy',
-              Agent: 'Agent',
-              StartURL: 'StartURL',
-              Screen: 'Screen',
-              ChromeVersion: 'ChromeVersion',
-              Delay: 'Delay',
-              Created: 'Created',
-              Updated: 'Updated',
-              Path: 'Path'
-            }
-          ]
-        ])
-        XLSX.utils.book_append_sheet(wb, ws, 'Profiles')
-        // Lưu lại workbook vào file Excel
-        XLSX.writeFile(wb, excelFilePath)
-      }
-      // userProfile.p
-
-      const data = XLSX.utils.sheet_to_json(ws)
-      data.push({
-        Name: userProfile.profileName,
-        Proxy: userProfile.proxy?.proxyIP ?? '',
-        Agent: userProfile.userAgent,
-        StartURL: userProfile.startURL,
-        ChromeVersion: userProfile.version,
-        Delay: userProfile.delayOpenSeconds,
-        Created: userProfile.created,
-        Path: pathSave
-      })
-
-      ws = XLSX.utils.json_to_sheet(data)
-
-      wb.Sheets['Profiles'] = ws // Cập nhật sheet trong workbook
-      // Ghi lại file Excel
-      XLSX.writeFile(wb, excelFilePath)
-      return { success: true, message: 'Tạo user profile thành công' }
-    } catch (err) {
-      return { success: false, message: 'Vui lòng không mở file excel khi tiến hành lưu !!!' }
-    }
-
-    // Kiểm tra xem file Excel đã tồn tại chưa
+  ipcMain.handle('closeChromeProfile', (_, ...args: Parameters<CloseChromeWithProfile>) =>
+    closeChromeProfile(...args)
+  )
+  ipcMain.handle('saveUserProfile', (_, ...args: Parameters<SaveChromeProfile>) => {
+    return WriteUserProfileToExcelFile('Profiles', ...args)
   })
-  ipcMain.on('openChromeProfile', () => {
-    openChromeProfile()
-    // openChromeProfile()
-  })
+
+  // ipcMain.handle('saveUserProfile', async (_, userProfile: UserProfileType) => {
+  //   let pathSave = await saveChromeProfiles(userProfile)
+  //   let wb
+  //   let ws
+  //   const directoryPath = path.join(__dirname, '../../db')
+
+  //   if (!fs.existsSync(directoryPath)) {
+  //     fs.mkdirSync(directoryPath, { recursive: true })
+  //   }
+  //   const excelFilePath = path.join(directoryPath, 'information.xlsx')
+
+  //   try {
+  //     if (fs.existsSync(excelFilePath)) {
+  //       // Nếu file tồn tại, đọc file Excel hiện tại
+  //       wb = XLSX.readFile(excelFilePath)
+  //       ws = wb.Sheets['Profiles']
+  //     } else {
+  //       // Nếu không tồn tại, tạo một workbook mới và thêm sheet 'Profiles'
+  //       wb = XLSX.utils.book_new()
+  //       XLSX.utils.book_append_sheet(wb, ws, 'Profiles')
+  //       XLSX.writeFile(wb, excelFilePath)
+  //     }
+  //     // userProfile.p
+
+  //     const data: UserProfileType[] = XLSX.utils.sheet_to_json(ws)
+  //     data.push({ ...userProfile, pathSave: pathSave })
+  //     ws = XLSX.utils.json_to_sheet(data)
+  //     wb.Sheets['Profiles'] = ws // Cập nhật sheet trong workbook
+  //     // Ghi lại file Excel
+  //     XLSX.writeFile(wb, excelFilePath)
+  //     return { success: true, message: 'Tạo user profile thành công' }
+  //   } catch (err) {
+  //     return { success: false, message: 'Vui lòng không mở file excel khi tiến hành lưu !!!' }
+  //   }
+
+  //   // Kiểm tra xem file Excel đã tồn tại chưa
+  // })
+  // ipcMain.on('openChromeProfile', () => {
+  //   openChromeProfile()
+  //   // openChromeProfile()
+  // })
   ipcMain.on('onCreateSyncAction', () => {})
 
   ipcMain.on('createWebSocket', () => {})
 
-  ipcMain.handle(
-    'openChromeWithMultipleProfile',
-    (_, ...args: Parameters<OpenChromeWithMultipleProfile>) =>
-      openChromeWithMultipleProfiles(...args)
-  )
+  // ipcMain.handle(
+  //   'openChromeWithMultipleProfile',
+  //   (_, ...args: Parameters<OpenChromeWithMultipleProfile>) =>
+  //     openChromeWithMultipleProfiles(...args)
+  // )
 
   // ipcMain.handle('openChromeWithMultipleProfile')
 

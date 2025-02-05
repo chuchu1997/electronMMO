@@ -22,7 +22,7 @@ export const OverViewBrowser = () => {
     const { name, value } = event.target
     onDispatchUpdateBrowserProfile({
       ...userProfileSelector,
-      [name]: [value]
+      [name]: value
     })
   }
 

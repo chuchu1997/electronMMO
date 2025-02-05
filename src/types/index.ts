@@ -33,4 +33,5 @@ export type UserProfileType = {
   pathSave?: string
   created?: string
   updated?: string
+  isRunning?: boolean
 }

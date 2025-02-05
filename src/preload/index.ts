@@ -7,11 +7,18 @@ if (!process.contextIsolated) {
 }
 try {
   contextBridge.exposeInMainWorld('electron', {
-    openChromeProfile: () => {
-      ipcRenderer.send('openChromeProfile')
+    openChromeProfile: (profile: UserProfileType) => {
+      return ipcRenderer.invoke('openChromeProfile', profile)
+    },
+    closeChromeProfile: (profile: UserProfileType) => {
+      return ipcRenderer.invoke('closeChromeProfile', profile)
     },
     saveUserProfile: async (userProfile: UserProfileType) => {
       return await ipcRenderer.invoke('saveUserProfile', userProfile)
+    },
+
+    readChromeProfilesFromExcel: async () => {
+      return await ipcRenderer.invoke('readChromeProfilesFromExcel')
     }
   })
 } catch (err) {

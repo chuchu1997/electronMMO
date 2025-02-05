@@ -3,7 +3,7 @@ import { Content, RootLayout, SideBar, DraggableTopBar, ActionButton } from './c
 
 // import {current}
 
-import { DashboardView, CreateProfileChromeView } from './views'
+import { DashboardView, CreateProfileChromeView, ManageChromeProfiles } from './views'
 import { RootState } from 'src/types'
 
 function App(): JSX.Element {
@@ -17,7 +17,7 @@ function App(): JSX.Element {
       case 'manage-proxy':
         return <>THIS IS MANAGE PROXY</>
       case 'manage-profile':
-        return <>THIS IS MANAGE PROFILE !!</>
+        return <ManageChromeProfiles />
       default:
         return <></>
     }
@@ -30,7 +30,7 @@ function App(): JSX.Element {
       <DraggableTopBar className="" />
       <RootLayout className="">
         <SideBar className="p-2  text-black"></SideBar>
-        <Content className="border-l border-l-black/40 pt-[40px] text-red-500 p-4 ">
+        <Content className="border-l border-l-black/40 pt-[40px] text-black p-4 ">
           {renderView}
         </Content>
       </RootLayout>
