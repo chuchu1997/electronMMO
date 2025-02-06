@@ -26,7 +26,8 @@ export default defineConfig({
         '@/store': resolve('src/renderer/src/store'),
         '@/components': resolve('src/renderer/src/components'),
         '@/mocks': resolve('src/renderer/src/mocks'),
-        '@/redux': resolve('src/renderer/src/redux')
+        '@/redux': resolve('src/renderer/src/redux'),
+        '@/toast': resolve('src/renderer/src/toast')
       }
     },
     plugins: [react()]

@@ -3,17 +3,19 @@ import React from 'react'
 import { DropdownButton } from '../../DropdownButton'
 import { DropdownMenu } from '../../DropdownButton/DropdownMenu'
 import { useStoreCallback } from '../../../redux/callback'
+import { VersionType } from '@shared/models'
+import { CustomToast } from '../../../toast'
 export const OverViewBrowser = () => {
   const screenResolutions = ['125x125', '1024x768', '1920x1080']
 
   const versionChrome = () => {
-    const listVersionChrome: number[] = []
+    const listVersionChrome: VersionType[] = []
     for (let i = 117; i <= 132; i++) {
-      listVersionChrome.push(i)
+      listVersionChrome.push(i as VersionType)
     }
     return listVersionChrome
   }
-  let chromeVersions: number[] = versionChrome()
+  let chromeVersions: VersionType[] = versionChrome()
 
   const { createUserProfileStateSelector, onDispatchUpdateCreateUserProfile, onRandomUserAgent } =
     useStoreCallback()
@@ -26,11 +28,13 @@ export const OverViewBrowser = () => {
     })
   }
 
-  const changeChromeVersionFromUserAgent = (version: number) => {
+  const changeChromeVersionFromUserAgent = (version: VersionType) => {
+    console.log('HELL OWORLD')
     if (createUserProfileStateSelector.userAgent) {
+      console.log('MATCH')
       const regex = /Chrome\/(\d+\.\d+\.\d+\.\d+)/
       const match = createUserProfileStateSelector.userAgent.match(regex)
-
+      console.log('MATCH')
       if (match) {
         const chromeVersion = match[1] // Lấy giá trị phiên bản từ nhóm trong biểu thức chính quy
         console.log('Chrome version:', chromeVersion) // In ra phiên bản Chrome
@@ -38,12 +42,14 @@ export const OverViewBrowser = () => {
           `Chrome/${chromeVersion}`,
           `Chrome/${version}.0.0.0`
         )
-
         onDispatchUpdateCreateUserProfile({
           ...createUserProfileStateSelector,
-          userAgent: newVersion
+          version: version
+          // userAgent: newVersion
         })
       }
+    } else {
+      CustomToast.error({ message: 'Sai cú pháp user agent' })
     }
   }
   const onHandleBtnDelay = (mode: 'plus' | 'sub') => {
@@ -68,8 +74,9 @@ export const OverViewBrowser = () => {
   }
   return (
     <div className="flex flex-col gap-4">
+      <span>{createUserProfileStateSelector.version.toString()}</span>
       <section>
-        <DropdownButton title="Chọn Version Chrome">
+        <DropdownButton title={createUserProfileStateSelector.version.toString()}>
           <DropdownMenu
             items={[
               ...chromeVersions.map((version) => {
@@ -97,7 +104,14 @@ export const OverViewBrowser = () => {
       </section>
       {/* ///SECTION 3 */}
       <section className="grid grid-cols-2 gap-4">
-        <DropdownButton title="Chọn Screen" fullWidthBtn>
+        <DropdownButton
+          title={
+            createUserProfileStateSelector.screen == ''
+              ? 'Chọn Screen'
+              : createUserProfileStateSelector.screen
+          }
+          fullWidthBtn
+        >
           <DropdownMenu
             items={[
               ...screenResolutions.map((resolution) => {

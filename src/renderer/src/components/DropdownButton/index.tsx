@@ -34,7 +34,9 @@ export const DropdownButton = ({
       <div
         tabIndex={0}
         role="button"
-        className={twMerge(`btn btn-neutral ${fullWidthBtn && 'w-full'}`)}
+        className={twMerge(
+          `rounded-md p-2 flex items-center gap-2 justify-between border border-accent text-accent ${fullWidthBtn && 'w-full'}`
+        )}
         onClick={toggleDropdown} // Mở hoặc đóng dropdown
       >
         {title}

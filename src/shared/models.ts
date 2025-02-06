@@ -24,11 +24,12 @@ export type ProxyType = {
   username?: string
   password?: string
 }
+export type VersionType = 127 | 128 | 129 | 130
 export type UserProfileType = {
   profileName: string
   browser: 'chrome' | 'firefox'
   os: string
-  version: 127 | 128 | 129 | 130
+  version: VersionType
   userAgent: string
   screen: string
   cpu: 2 | 4 | 8 | 16 | 32
