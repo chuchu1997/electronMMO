@@ -1,4 +1,4 @@
-import { ManageView } from 'src/types'
+import { UserProfileType, ManageView } from '@shared/models'
 import { SET_CURRENT_VIEW } from '../actions'
 
 const initialViewState: ManageView = {

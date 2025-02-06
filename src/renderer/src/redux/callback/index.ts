@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { updateView, UpdateStateForChromeProfile, updateCreateUserProfile } from '../actions'
-import { RootState, UserProfileType } from 'src/types'
+
+import { RootState, UserProfileType } from '@shared/models'
 export const useStoreCallback = () => {
   const dispatch = useDispatch()
 

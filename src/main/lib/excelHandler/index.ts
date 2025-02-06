@@ -1,7 +1,7 @@
 import XLSX from 'xlsx'
 import path from 'path'
 import fs from 'fs'
-import { UserProfileType } from 'src/types'
+import { UserProfileType } from '@shared/models'
 import { saveProfileChrome } from '../chromeHandler/chromeAction'
 let wb
 let ws
@@ -19,6 +19,17 @@ export const ReadAndGetUserProfilesFromExcel = (excelPath: string, sheet: string
   }
   //IF DATA LENGTH == 0
   return { isOK, data }
+}
+
+export const GetAllUserProfileFromExcelFile = () => {
+  console.log('CALL THIS !!')
+  const directory = path.join(__dirname, '../../db')
+  const excelPath = path.join(directory, 'information.xlsx')
+
+  let result = ReadAndGetUserProfilesFromExcel(excelPath, 'Profiles')
+  if (result.isOK) {
+    return { profiles: result.data, status: 200 }
+  }
 }
 export const WriteUserProfileToExcelFile = async (sheet: string, profile: UserProfileType) => {
   console.log('CÓ GỌI NÈ !!')

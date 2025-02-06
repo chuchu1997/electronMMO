@@ -6,7 +6,7 @@
 //     type:
 // })
 
-import { UserProfileType } from 'src/types'
+import { UserProfileType } from '@shared/models'
 
 export const UPDATE_CREATE_USER_PROFILE = 'UPDATE_CREATE_USER_PROFILE'
 export const CLEAR_CREATE_USER_PROFILE = 'CLEAR_CREATE_USER_PROFILE'

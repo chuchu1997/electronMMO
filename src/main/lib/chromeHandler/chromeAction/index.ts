@@ -1,4 +1,4 @@
-import { UserProfileType } from 'src/types'
+import { UserProfileType } from '../../../../shared/models'
 import path from 'path'
 import fs from 'fs'
 import { Options } from 'selenium-webdriver/chrome'

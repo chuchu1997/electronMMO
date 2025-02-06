@@ -1,8 +1,10 @@
-import { UserProfileType } from 'src/types'
+// import { UserProfileType } from '@/shared/models'
+
 import { Options } from 'selenium-webdriver/chrome'
 
 import { Builder, WebDriver } from 'selenium-webdriver'
 
+import { UserProfileType } from '@shared/models'
 interface CustomInterfaceDriver {
   profileName: string
   webDriver: WebDriver
@@ -24,9 +26,9 @@ export const closeChromeProfile = async (profile: UserProfileType) => {
       if (index !== -1) {
         drivers.splice(index, 1)
       }
-      return { isOpen: false, message: 'Tắt Chrome Thành Công ' }
     }
   }
+  return { isOpen: false, message: 'Tắt Chrome Thành Công ' }
 }
 
 export const closeChromeWithMultipleProfile = async (profiles: UserProfileType[]) => {

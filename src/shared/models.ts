@@ -1,4 +1,16 @@
-import rootReducer from 'src/renderer/src/redux/reducers/rootReducer'
+// import rootReducer from 'src/renderer/src/redux/reducers/rootReducer'
+
+import rootReducer from '../renderer/src/redux/reducers/rootReducer'
+
+export type ChromeProfile = {
+  nameProfile: string
+
+  path: string
+  proxy?: string
+  proxyUserName?: string
+  proxyPassword?: string
+  created: number
+}
 
 export type RootState = ReturnType<typeof rootReducer>
 export type ManageView = {

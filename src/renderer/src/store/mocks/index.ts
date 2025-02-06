@@ -1,4 +1,4 @@
-import { ChromeProfile } from '@renderer/shared/models'
+import { ChromeProfile } from '@shared/models'
 export const chromesProfileMock: ChromeProfile[] = [
   {
     nameProfile: 'TestABC',

@@ -1,4 +1,4 @@
-import { UserProfileType } from 'src/types'
+import { UserProfileType } from '@shared/models'
 import { UPDATE_STATE_CHROME_PROFILE } from '../actions'
 
 const initialState: UserProfileType[] = []

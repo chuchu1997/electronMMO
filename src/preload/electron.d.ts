@@ -1,6 +1,14 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
-import { OpenChromeWithMultipleProfile } from '@shared/types'
-import { UserProfileType } from 'src/types'
+import {
+  CloseChromeWithMultipleProfile,
+  CloseChromeWithProfile,
+  OpenChromeWithMultipleProfile,
+  OpenChromeWithProfile,
+  ReadChromeProfilesFromExcelFile,
+  SaveChromeProfile
+} from '@shared/types'
+
+import { UserProfileType } from '@shared/models'
 declare global {
   interface Window {
     context: {
@@ -9,18 +17,12 @@ declare global {
       testFunc(): void
     }
     electron: {
-      openChromeWithMultipleProfile: (profiles: UserProfileType[]) => {
-        profilesOpen: UserProfileType[]
-        message
-      }
-      openChromeProfile: (profile: UserProfileType) => { isOpen; message }
-      closeChromeProfile: (profile: UserProfileType) => { isOpen; message }
-      closeChromeWithMultipleProfile: (profiles: UserProfileType[]) => {
-        profilesClose: UserProfileType[]
-        message
-      }
-      saveUserProfile: (userProfile: UserProfileType) => { success; message }
-      readChromeProfilesFromExcel: () => { profiles: UserProfileType[]; status }
+      openChromeWithMultipleProfile: OpenChromeWithMultipleProfile
+      openChromeProfile: OpenChromeWithProfile
+      closeChromeProfile: CloseChromeWithProfile
+      closeChromeWithMultipleProfile: CloseChromeWithMultipleProfile
+      saveUserProfile: SaveChromeProfile
+      readChromeProfilesFromExcel: ReadChromeProfilesFromExcelFile
     }
   }
 }

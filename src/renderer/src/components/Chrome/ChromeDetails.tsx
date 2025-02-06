@@ -1,6 +1,5 @@
 import { ComponentProps } from 'react'
-
-import { UserProfileType } from 'src/types'
+import { UserProfileType } from '@shared/models'
 import { twMerge } from 'tailwind-merge'
 import { useStoreCallback } from '../../redux/callback'
 // type ChromeDetailType

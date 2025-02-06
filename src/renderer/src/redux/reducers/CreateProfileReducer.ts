@@ -1,4 +1,4 @@
-import { UserProfileType } from 'src/types'
+import { UserProfileType } from '@shared/models'
 import { formatDateFromMS } from '../../utils'
 import { CLEAR_CREATE_USER_PROFILE, UPDATE_CREATE_USER_PROFILE } from '../actions'
 

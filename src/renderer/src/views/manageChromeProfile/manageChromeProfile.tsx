@@ -1,4 +1,4 @@
-import { UserProfileType } from 'src/types'
+import { UserProfileType } from '@shared/models'
 import { ActionButton } from '../../components'
 import { useEffect, useState } from 'react'
 import { LuPause, LuPlay } from 'react-icons/lu'
@@ -26,7 +26,9 @@ export const ManageChromeProfiles = () => {
 
   const [enabledTopActionButton, setEnabledTopActionButton] = useState(false)
   useEffect(() => {
+    console.log('HELL OWORLD', chromeProfileStateSelector)
     if (chromeProfileStateSelector.length == 0) {
+      console.log('CALL NE !!')
       readInformationChromeProfilesInExcelFile()
     }
   }, [])

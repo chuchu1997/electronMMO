@@ -41,6 +41,7 @@ export const CreateProfileChromeView = () => {
             <ActionButton
               className="w-[200px]"
               onClick={async () => {
+                window.electron.saveUserProfile(createUserProfileStateSelector)
                 const result = await window.electron.saveUserProfile(createUserProfileStateSelector)
                 console.log('CALL NE')
                 if (result.success) {

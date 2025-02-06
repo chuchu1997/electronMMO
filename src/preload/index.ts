@@ -1,6 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import { OpenChromeWithMultipleProfile } from '../renderer/src/shared/types'
-import { UserProfileType } from '../types'
+import { UserProfileType } from '@shared/models'
 
 if (!process.contextIsolated) {
   throw new Error('contextIsolate must be enabled in the BrowserWindow')
@@ -24,7 +23,6 @@ try {
       return await ipcRenderer.invoke('readChromeProfilesFromExcel')
     },
     openChromeWithMultipleProfile: async (profiles: UserProfileType[]) => {
-      console.log('CALL CALL')
       return await ipcRenderer.invoke('openChromeWithMultipleProfile', profiles)
     }
   })

@@ -5,8 +5,8 @@
     "src/renderer/src/**/*",
     "src/renderer/src/**/*.tsx",
     "src/preload/*.d.ts",
-    "src/shared/**/*"
-, "src/preload/electron.ts"  ],
+    "src/shared/**/*", "src/shared",
+  ],
   "compilerOptions": {
     "composite": true,
     "jsx": "react-jsx",
@@ -14,16 +14,14 @@
     "baseUrl": ".",
     "paths": {
       "@renderer/*": [
-        "src/renderer/src/*",
- 
+        "src/renderer/src/*"
       ],
-      "@shared/*":[
+      "@shared/*": [
         "src/shared/*"
       ],
-      "@/*":[
+      "@/*": [
         "src/renderer/src/*"
-      ]
-     
+      ],
     }
   }
 }
