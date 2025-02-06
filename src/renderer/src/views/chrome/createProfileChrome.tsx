@@ -10,8 +10,8 @@ import { CustomToast } from '../../toast'
 
 export const CreateProfileChromeView = () => {
   const {
-    userProfileSelector,
-    onDispatchUpdateBrowserProfile,
+    createUserProfileStateSelector,
+    onDispatchUpdateCreateUserProfile,
     onResetBrowserProfile,
     onRandomUserAgent
   } = useStoreCallback()
@@ -29,10 +29,10 @@ export const CreateProfileChromeView = () => {
             <InputComponent
               placeholder="Tên Profile"
               icon={<LuUser />}
-              value={userProfileSelector.profileName}
+              value={createUserProfileStateSelector.profileName}
               onChange={(event) => {
-                onDispatchUpdateBrowserProfile({
-                  ...userProfileSelector,
+                onDispatchUpdateCreateUserProfile({
+                  ...createUserProfileStateSelector,
                   profileName: event.target.value
                 })
               }}
@@ -41,9 +41,7 @@ export const CreateProfileChromeView = () => {
             <ActionButton
               className="w-[200px]"
               onClick={async () => {
-                console.log('USER PROFILE', userProfileSelector)
-
-                const result = await window.electron.saveUserProfile(userProfileSelector)
+                const result = await window.electron.saveUserProfile(createUserProfileStateSelector)
                 console.log('CALL NE')
                 if (result.success) {
                   CustomToast.success({ message: 'Tạo user profile thành công ' })

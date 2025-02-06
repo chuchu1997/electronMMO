@@ -1,9 +1,12 @@
 import { combineReducers } from 'redux'
-import profileReducer from './profileReducer' // Import reducer cho user profile
 import manageViewReducer from './manageViewReducer'
+import { chromeProfileStateReducer } from './chromeProfileWithStateReducer'
+import { createProfileReducer } from './CreateProfileReducer'
+
 const rootReducer = combineReducers({
-  userProfile: profileReducer,
-  currentView: manageViewReducer
+  currentView: manageViewReducer,
+  chromeProfileWithState: chromeProfileStateReducer,
+  createUserProfileState: createProfileReducer
 })
 
 export default rootReducer

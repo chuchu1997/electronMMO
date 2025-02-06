@@ -3,6 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import {
+  CloseChromeWithMultipleProfile,
   CloseChromeWithProfile,
   OpenChromeWithMultipleProfile,
   OpenChromeWithProfile,
@@ -11,7 +12,9 @@ import {
 import {
   closeAllChromeProfile,
   closeChromeProfile,
+  closeChromeWithMultipleProfile,
   openChromeProfile,
+  openChromeWithMultipleProfile,
   WriteUserProfileToExcelFile
 } from './lib'
 import { Builder, Capabilities, WebDriver } from 'selenium-webdriver'
@@ -165,9 +168,19 @@ app.whenReady().then(() => {
   ipcMain.handle('openChromeProfile', (_, ...args: Parameters<OpenChromeWithProfile>) =>
     openChromeProfile(...args)
   )
+  ipcMain.handle(
+    'openChromeWithMultipleProfile',
+    (_, ...args: Parameters<OpenChromeWithMultipleProfile>) =>
+      openChromeWithMultipleProfile(...args)
+  )
 
   ipcMain.handle('closeChromeProfile', (_, ...args: Parameters<CloseChromeWithProfile>) =>
     closeChromeProfile(...args)
+  )
+  ipcMain.handle(
+    'closeChromeWithMultipleProfile',
+    (_, ...args: Parameters<CloseChromeWithMultipleProfile>) =>
+      closeChromeWithMultipleProfile(...args)
   )
   ipcMain.handle('saveUserProfile', (_, ...args: Parameters<SaveChromeProfile>) => {
     return WriteUserProfileToExcelFile('Profiles', ...args)

@@ -5,6 +5,7 @@ import { Content, RootLayout, SideBar, DraggableTopBar, ActionButton } from './c
 
 import { DashboardView, CreateProfileChromeView, ManageChromeProfiles } from './views'
 import { RootState } from 'src/types'
+// import {} from "@/"
 
 function App(): JSX.Element {
   // const renderView = useSelector((state: any) => state.view)

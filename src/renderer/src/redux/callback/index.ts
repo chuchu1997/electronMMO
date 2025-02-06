@@ -1,18 +1,34 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { updateView, updateUserProfile } from '../actions'
+import { updateView, UpdateStateForChromeProfile, updateCreateUserProfile } from '../actions'
 import { RootState, UserProfileType } from 'src/types'
 export const useStoreCallback = () => {
   const dispatch = useDispatch()
 
-  const userProfileSelector: UserProfileType = useSelector((state: RootState) => state.userProfile)
+  const chromeProfileStateSelector: UserProfileType[] = useSelector(
+    (state: RootState) => state.chromeProfileWithState
+  )
+  // const chromeProfileWithStateSelector: UserProfileType = useSelector((state: UserProfileType) => state)
+  const createUserProfileStateSelector: UserProfileType = useSelector(
+    (state: RootState) => state.createUserProfileState
+  )
 
-  const onDispatchUpdateBrowserProfile = (profile: UserProfileType) => {
-    dispatch(updateUserProfile(profile))
+  const onDispatchUpdateCreateUserProfile = (profile: UserProfileType) => {
+    dispatch(updateCreateUserProfile(profile))
   }
+
   const onDispatchChangeView = (view: any) => {
     dispatch(updateView({ view }))
   }
+  const onDispatchUpdateChromeStateFromProfile = (profiles: UserProfileType[]) => {
+    console.log('PROFILES CALLED !!!', profiles)
 
+    dispatch(
+      // UpdateStateForChromeProfile({
+      //  [...profiles]
+      // })
+      UpdateStateForChromeProfile(profiles)
+    )
+  }
   const onRandomUserAgent = () => {
     const userAgentsGen = [
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36',
@@ -26,18 +42,16 @@ export const useStoreCallback = () => {
       'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.5414.75 Safari/537.36',
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.5481.77 Safari/537.36'
     ]
-
     const randomIndex = Math.floor(Math.random() * userAgentsGen.length)
-
-    onDispatchUpdateBrowserProfile({
-      ...userProfileSelector,
+    onDispatchUpdateCreateUserProfile({
+      ...createUserProfileStateSelector,
       userAgent: userAgentsGen[randomIndex]
     })
   }
 
   const onResetBrowserProfile = () => {
     dispatch(
-      updateUserProfile({
+      updateCreateUserProfile({
         profileName: '',
         browser: 'chrome',
         os: '',
@@ -66,11 +80,13 @@ export const useStoreCallback = () => {
     )
   }
   return {
-    userProfileSelector,
+    createUserProfileStateSelector,
     onDispatchChangeView,
-    onDispatchUpdateBrowserProfile,
+    onDispatchUpdateCreateUserProfile,
     onResetBrowserProfile,
-    onRandomUserAgent
+    onRandomUserAgent,
+    onDispatchUpdateChromeStateFromProfile,
+    chromeProfileStateSelector
   }
   // const selector =  useSelector();
 }

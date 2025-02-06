@@ -13,12 +13,19 @@ try {
     closeChromeProfile: (profile: UserProfileType) => {
       return ipcRenderer.invoke('closeChromeProfile', profile)
     },
+    closeChromeWithMultipleProfile: (profiles: UserProfileType[]) => {
+      return ipcRenderer.invoke('closeChromeWithMultipleProfile', profiles)
+    },
     saveUserProfile: async (userProfile: UserProfileType) => {
       return await ipcRenderer.invoke('saveUserProfile', userProfile)
     },
 
     readChromeProfilesFromExcel: async () => {
       return await ipcRenderer.invoke('readChromeProfilesFromExcel')
+    },
+    openChromeWithMultipleProfile: async (profiles: UserProfileType[]) => {
+      console.log('CALL CALL')
+      return await ipcRenderer.invoke('openChromeWithMultipleProfile', profiles)
     }
   })
 } catch (err) {

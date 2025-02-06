@@ -6,24 +6,23 @@ import { InputComponent } from '../../Input'
 import { useStoreCallback } from '../../../redux/callback'
 export const InternetProxy = () => {
   const listProxyTypes = ['HTTP Proxy', 'SOCKS4 Proxy', 'SOCKS5 Proxy', 'TM PROXY', 'Tin Proxy']
-  const { userProfileSelector, onDispatchUpdateBrowserProfile } = useStoreCallback()
+  const { createUserProfileStateSelector, onDispatchUpdateCreateUserProfile } = useStoreCallback()
   // const [proxyType, setProxyType] = useState('Chọn loại proxy')
 
   return (
     <div className="flex flex-col gap-2">
-      <DropdownButton title={userProfileSelector.proxy?.proxyType ?? ''}>
+      <DropdownButton title={createUserProfileStateSelector.proxy?.proxyType ?? ''}>
         <DropdownMenu
           items={[
             ...listProxyTypes.map((proxyType) => {
               return {
                 label: proxyType,
                 onClick: () => {
-                  userProfileSelector.proxy!.proxyType = proxyType
-                  onDispatchUpdateBrowserProfile({
-                    ...userProfileSelector,
-                    proxy: userProfileSelector.proxy
+                  createUserProfileStateSelector.proxy!.proxyType = proxyType
+                  onDispatchUpdateCreateUserProfile({
+                    ...createUserProfileStateSelector,
+                    proxy: createUserProfileStateSelector.proxy
                   })
-                  // setProxyType(proxyType)
                 }
               }
             })

@@ -15,32 +15,32 @@ export const OverViewBrowser = () => {
   }
   let chromeVersions: number[] = versionChrome()
 
-  const { userProfileSelector, onDispatchUpdateBrowserProfile, onRandomUserAgent } =
+  const { createUserProfileStateSelector, onDispatchUpdateCreateUserProfile, onRandomUserAgent } =
     useStoreCallback()
 
   const handleInputChange = (event) => {
     const { name, value } = event.target
-    onDispatchUpdateBrowserProfile({
-      ...userProfileSelector,
+    onDispatchUpdateCreateUserProfile({
+      ...createUserProfileStateSelector,
       [name]: value
     })
   }
 
   const changeChromeVersionFromUserAgent = (version: number) => {
-    if (userProfileSelector.userAgent) {
+    if (createUserProfileStateSelector.userAgent) {
       const regex = /Chrome\/(\d+\.\d+\.\d+\.\d+)/
-      const match = userProfileSelector.userAgent.match(regex)
+      const match = createUserProfileStateSelector.userAgent.match(regex)
 
       if (match) {
         const chromeVersion = match[1] // Lấy giá trị phiên bản từ nhóm trong biểu thức chính quy
         console.log('Chrome version:', chromeVersion) // In ra phiên bản Chrome
-        let newVersion = userProfileSelector.userAgent.replace(
+        let newVersion = createUserProfileStateSelector.userAgent.replace(
           `Chrome/${chromeVersion}`,
           `Chrome/${version}.0.0.0`
         )
 
-        onDispatchUpdateBrowserProfile({
-          ...userProfileSelector,
+        onDispatchUpdateCreateUserProfile({
+          ...createUserProfileStateSelector,
           userAgent: newVersion
         })
       }
@@ -49,18 +49,19 @@ export const OverViewBrowser = () => {
   const onHandleBtnDelay = (mode: 'plus' | 'sub') => {
     switch (mode) {
       case 'plus':
-        userProfileSelector.delayOpenSeconds++
-        onDispatchUpdateBrowserProfile({
-          ...userProfileSelector,
-          delayOpenSeconds: userProfileSelector.delayOpenSeconds
+        createUserProfileStateSelector.delayOpenSeconds++
+        onDispatchUpdateCreateUserProfile({
+          ...createUserProfileStateSelector,
+          delayOpenSeconds: createUserProfileStateSelector.delayOpenSeconds
         })
         break
 
       case 'sub':
-        if (userProfileSelector.delayOpenSeconds > 0) userProfileSelector.delayOpenSeconds--
-        onDispatchUpdateBrowserProfile({
-          ...userProfileSelector,
-          delayOpenSeconds: userProfileSelector.delayOpenSeconds
+        if (createUserProfileStateSelector.delayOpenSeconds > 0)
+          createUserProfileStateSelector.delayOpenSeconds--
+        onDispatchUpdateCreateUserProfile({
+          ...createUserProfileStateSelector,
+          delayOpenSeconds: createUserProfileStateSelector.delayOpenSeconds
         })
         break
     }
@@ -87,7 +88,7 @@ export const OverViewBrowser = () => {
         <InputComponent
           placeholder="userAgent"
           name="userAgent"
-          value={userProfileSelector.userAgent}
+          value={createUserProfileStateSelector.userAgent}
           onChange={handleInputChange}
         />
         <button className="btn btn-neutral absolute top-0 right-0" onClick={onRandomUserAgent}>
@@ -103,8 +104,8 @@ export const OverViewBrowser = () => {
                 return {
                   label: resolution.toString(),
                   onClick: () => {
-                    onDispatchUpdateBrowserProfile({
-                      ...userProfileSelector,
+                    onDispatchUpdateCreateUserProfile({
+                      ...createUserProfileStateSelector,
                       screen: resolution
                     })
                     // changeChromeVersionFromUserAgent(resolution)
@@ -119,7 +120,7 @@ export const OverViewBrowser = () => {
         <InputComponent
           placeholder="Start URL"
           name="startURL"
-          value={userProfileSelector.startURL}
+          value={createUserProfileStateSelector.startURL}
           onChange={handleInputChange}
         />
 
@@ -137,7 +138,7 @@ export const OverViewBrowser = () => {
             type="number"
             placeholder="Delay mở (seconds)"
             name="delayOpenSeconds"
-            value={userProfileSelector.delayOpenSeconds}
+            value={createUserProfileStateSelector.delayOpenSeconds}
             onChange={handleInputChange}
           ></InputComponent>
         </div>

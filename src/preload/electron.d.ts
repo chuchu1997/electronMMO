@@ -9,8 +9,16 @@ declare global {
       testFunc(): void
     }
     electron: {
+      openChromeWithMultipleProfile: (profiles: UserProfileType[]) => {
+        profilesOpen: UserProfileType[]
+        message
+      }
       openChromeProfile: (profile: UserProfileType) => { isOpen; message }
       closeChromeProfile: (profile: UserProfileType) => { isOpen; message }
+      closeChromeWithMultipleProfile: (profiles: UserProfileType[]) => {
+        profilesClose: UserProfileType[]
+        message
+      }
       saveUserProfile: (userProfile: UserProfileType) => { success; message }
       readChromeProfilesFromExcel: () => { profiles: UserProfileType[]; status }
     }
