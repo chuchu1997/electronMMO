@@ -6,7 +6,6 @@ const initialProfileState: UserProfileType = {
   profileName: '',
   browser: 'chrome',
   os: '',
-  version: 130,
   userAgent: '',
   screen: '1920x1080',
   cpu: 4,
@@ -20,7 +19,7 @@ const initialProfileState: UserProfileType = {
   audioContext: 'off',
   fonts: 'off',
   proxy: {
-    proxyType: 'HTTP Proxy',
+    proxyType: 'http-proxy',
     proxyIP: '',
     port: 0,
     username: '',

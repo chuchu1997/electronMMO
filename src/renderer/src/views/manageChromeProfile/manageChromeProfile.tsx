@@ -1,7 +1,7 @@
 import { UserProfileType } from '@shared/models'
 import { ActionButton } from '../../components'
 import { useEffect, useState } from 'react'
-import { LuPause, LuPlay } from 'react-icons/lu'
+import { LuPause, LuPlay, LuTrash } from 'react-icons/lu'
 import { CustomToast } from '../../toast'
 import { useStoreCallback } from '../../redux/callback'
 
@@ -11,27 +11,9 @@ import { useStoreCallback } from '../../redux/callback'
 export const ManageChromeProfiles = () => {
   const { chromeProfileStateSelector, onDispatchUpdateChromeStateFromProfile } = useStoreCallback()
 
-  const readInformationChromeProfilesInExcelFile = async () => {
-    let result = await window.electron.readChromeProfilesFromExcel()
-    // console.log('PROFILE', result[0].)
-    if (result.status == 200) {
-      console.log('result', result.profiles)
-      onDispatchUpdateChromeStateFromProfile(result.profiles)
-      // console.log('RESULT', result.profiles[0].isRunning)
-      // setProfiles(result.profiles)
-    }
-  }
-
   const [selectProfiles, setSelectProfiles] = useState<UserProfileType[]>([])
 
   const [enabledTopActionButton, setEnabledTopActionButton] = useState(false)
-  useEffect(() => {
-    console.log('HELL OWORLD', chromeProfileStateSelector)
-    if (chromeProfileStateSelector.length == 0) {
-      console.log('CALL NE !!')
-      readInformationChromeProfilesInExcelFile()
-    }
-  }, [])
 
   useEffect(() => {
     if (chromeProfileStateSelector) {
@@ -99,7 +81,7 @@ export const ManageChromeProfiles = () => {
   }
   const onHandleCloseMultipleProfile = async (profiles: UserProfileType[]) => {
     let result = await window.electron.closeChromeWithMultipleProfile(profiles)
-    console.log('RESULT', result)
+
     if (result.profilesClose.length > 0) {
       CustomToast.success({ message: result.message })
       let updateProfileStatus: UserProfileType[] = [...chromeProfileStateSelector]
@@ -113,6 +95,34 @@ export const ManageChromeProfiles = () => {
       }
       onDispatchUpdateChromeStateFromProfile(updateProfileStatus)
     }
+  }
+  const onHandleDeleteMultipleProfile = async (profiles: UserProfileType[]) => {
+    let response = await window.electron.deleteMultipleUserChromeProfile(profiles)
+    if (response.status == 200) {
+      CustomToast.success({ message: response.message })
+      let updateListAfterDelete = [...chromeProfileStateSelector]
+      for (let i = 0; i < profiles.length; i++) {
+        if (updateListAfterDelete.includes(profiles[i])) {
+          let index = updateListAfterDelete.findIndex((item) => item.id === profiles[i].id)
+          updateListAfterDelete.splice(index, 1)
+        }
+      }
+
+      onDispatchUpdateChromeStateFromProfile(updateListAfterDelete)
+      //          updateListAfterDelete = updateListAfterDelete.filter(
+      //   (item) => item.id !== profile.id
+      // )
+    }
+    // let result = await window.electron.deleteUserChromeProfile(profile)
+    // if (result.status == 200) {
+    //   let updateListAfterDelete = [...chromeProfileStateSelector]
+    //   updateListAfterDelete = updateListAfterDelete.filter(
+    //     (item) => item.id !== profile.id
+    //   )
+    //   onDispatchUpdateChromeStateFromProfile(updateListAfterDelete)
+
+    //   CustomToast.success({ message: result.message })
+    // }
   }
   const RenderTopAction = () => {
     return (
@@ -131,6 +141,14 @@ export const ManageChromeProfiles = () => {
           <LuPause color="red" />
           Đóng ({selectProfiles.length}) Profile
         </ActionButton>
+
+        <ActionButton
+          className="flex items-center gap-2"
+          onClick={() => onHandleDeleteMultipleProfile(selectProfiles)}
+        >
+          <LuTrash color="red" />
+          Xóa ({selectProfiles.length}) Profile
+        </ActionButton>
       </div>
     )
   }
@@ -141,9 +159,53 @@ export const ManageChromeProfiles = () => {
       <table className="table">
         <thead>
           <tr>
-            <th>Check</th>
+            <th>
+              <div className="flex items-center gap-4">
+                <input
+                  type="checkbox"
+                  className="checkbox"
+                  id="select-all"
+                  onChange={() => {
+                    const selectAllCheckbox = document.getElementById(
+                      'select-all'
+                    ) as HTMLInputElement
+                    const checkboxes = document.querySelectorAll(
+                      '.checkbox'
+                    ) as NodeListOf<HTMLInputElement>
+
+                    checkboxes.forEach((checkbox) => {
+                      checkbox.checked = selectAllCheckbox.checked
+                    })
+
+                    const selectedItems = Array.from(checkboxes)
+                      .splice(1)
+                      .filter((checkbox) => {
+                        return (checkbox as HTMLInputElement).checked
+                      })
+
+                    let tempSelectProfiles: UserProfileType[] = []
+                    for (let boxChecked of selectedItems) {
+                      const row = (boxChecked as HTMLInputElement).closest('tr')
+                      if (row) {
+                        let cells = Array.from(row.cells).slice(2)
+                        let data = chromeProfileStateSelector.find(
+                          (profile) => profile.profileName === cells[0].innerText
+                        )
+                        if (data) {
+                          tempSelectProfiles.push(data)
+                        }
+                      }
+                    }
+                    setSelectProfiles(tempSelectProfiles)
+                  }}
+                ></input>
+                <span>Check</span>
+              </div>
+            </th>
+            <th>ID</th>
             <th>Name</th>
             <th>Proxy</th>
+            <th>Screen</th>
             <th>Agent</th>
             <th>StartURL</th>
             <th>Chrome Version</th>
@@ -156,7 +218,7 @@ export const ManageChromeProfiles = () => {
         <tbody>
           {chromeProfileStateSelector.map((profile) => (
             // <div key={profile.profileName}>{profile.profileName}</div>
-            <tr key={profile.profileName}>
+            <tr key={profile.id}>
               <td>
                 <input
                   type="checkbox"
@@ -168,13 +230,10 @@ export const ManageChromeProfiles = () => {
                     })
                     // const selectedItems = Array.from(checkboxes).filter((checkbox) => checkbox)
                     let tempSelectProfiles: UserProfileType[] = []
-
-                    selectedItems.forEach((checkbox, index) => {
-                      //SKIP ROW 1
-                      const row = (checkbox as HTMLInputElement).closest('tr') // Lấy hàng chứa checkbox và ép kiểu thành HTMLTableRowElement
-
+                    for (let boxChecked of selectedItems) {
+                      const row = (boxChecked as HTMLInputElement).closest('tr')
                       if (row) {
-                        const cells = Array.from(row.cells).slice(1) // Lấy các cell từ chỉ số 1 trở đi
+                        let cells = Array.from(row.cells).slice(2)
                         let data = chromeProfileStateSelector.find(
                           (profile) => profile.profileName === cells[0].innerText
                         )
@@ -182,13 +241,16 @@ export const ManageChromeProfiles = () => {
                           tempSelectProfiles.push(data)
                         }
                       }
-                    })
+                    }
+
                     setSelectProfiles(tempSelectProfiles)
                   }}
                 />
               </td>
+              <td className="max-w-[100px] truncate">{profile.id}</td>
               <td>{profile.profileName}</td>
               <td>{profile.proxy?.proxyIP ?? ''}</td>
+              <td>{profile.screen}</td>
               <td className="max-w-[200px]">{profile.userAgent}</td>
               <td>{profile.startURL}</td>
               <td>{profile.version}</td>
@@ -215,7 +277,22 @@ export const ManageChromeProfiles = () => {
                     </ActionButton>
                   )}
                   {/* {profile.isRunning ? <ActionButton>Đóng</ActionButton> ? <ActionButton>Mở</ActionButton> */}
-                  <ActionButton>Xóa</ActionButton>
+                  <ActionButton
+                    onClick={async () => {
+                      let result = await window.electron.deleteUserChromeProfile(profile)
+                      if (result.status == 200) {
+                        let updateListAfterDelete = [...chromeProfileStateSelector]
+                        updateListAfterDelete = updateListAfterDelete.filter(
+                          (item) => item.id !== profile.id
+                        )
+                        onDispatchUpdateChromeStateFromProfile(updateListAfterDelete)
+
+                        CustomToast.success({ message: result.message })
+                      }
+                    }}
+                  >
+                    Xóa
+                  </ActionButton>
                 </div>
               </td>
             </tr>

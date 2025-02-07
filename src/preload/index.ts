@@ -24,6 +24,12 @@ try {
     },
     openChromeWithMultipleProfile: async (profiles: UserProfileType[]) => {
       return await ipcRenderer.invoke('openChromeWithMultipleProfile', profiles)
+    },
+    deleteUserChromeProfile: async (profile: UserProfileType) => {
+      return await ipcRenderer.invoke('deleteUserChromeProfile', profile)
+    },
+    deleteMultipleUserChromeProfile: async (profiles: UserProfileType[]) => {
+      return await ipcRenderer.invoke('deleteMultipleUserChromeProfile', profiles)
     }
   })
 } catch (err) {

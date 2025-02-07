@@ -2,7 +2,7 @@ import { UserProfileType, ManageView } from '@shared/models'
 import { SET_CURRENT_VIEW } from '../actions'
 
 const initialViewState: ManageView = {
-  view: 'create-profile'
+  view: 'dashboard'
 }
 
 const manageViewReducer = (state = initialViewState, action) => {

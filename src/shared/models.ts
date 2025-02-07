@@ -18,7 +18,7 @@ export type ManageView = {
 }
 
 export type ProxyType = {
-  proxyType: string
+  proxyType: 'reverse-proxy' | 'proxy-v4' | 'http-proxy'
   proxyIP?: string
   port?: number
   username?: string
@@ -26,10 +26,11 @@ export type ProxyType = {
 }
 export type VersionType = 127 | 128 | 129 | 130
 export type UserProfileType = {
+  id?: string
   profileName: string
   browser: 'chrome' | 'firefox'
   os: string
-  version: VersionType
+  version?: VersionType
   userAgent: string
   screen: string
   cpu: 2 | 4 | 8 | 16 | 32

@@ -10,7 +10,9 @@ import {
   openChromeProfile,
   openChromeWithMultipleProfile,
   WriteUserProfileToExcelFile,
-  GetAllUserProfileFromExcelFile
+  GetAllUserProfileFromExcelFile,
+  DeleteUserProfileFromExcelFile,
+  DeleteMultipleUserProfileFromExcelFile
 } from './lib'
 import { Builder, Capabilities, WebDriver } from 'selenium-webdriver'
 import 'chromedriver'
@@ -20,7 +22,10 @@ import path from 'path'
 import fs from 'fs'
 // import { UserProfileType } from '@shared/models'
 import process from 'process'
-import { saveProfileChrome } from './lib/chromeHandler/chromeAction'
+import {
+  DeleteMultipleProfileChromeFolder,
+  saveProfileChrome
+} from './lib/chromeHandler/chromeAction'
 // import {
 //   OpenChromeWithProfile,
 //   OpenChromeWithMultipleProfile,
@@ -32,6 +37,8 @@ import { saveProfileChrome } from './lib/chromeHandler/chromeAction'
 import {
   CloseChromeWithMultipleProfile,
   CloseChromeWithProfile,
+  DeleteChromeProfile,
+  DeleteMultipleChromeProfile,
   OpenChromeWithMultipleProfile,
   OpenChromeWithProfile,
   ReadChromeProfilesFromExcelFile,
@@ -180,6 +187,18 @@ app.whenReady().then(() => {
   ipcMain.handle('saveUserProfile', (_, ...args: Parameters<SaveChromeProfile>) => {
     return WriteUserProfileToExcelFile('Profiles', ...args)
   })
+
+  ipcMain.handle('deleteUserChromeProfile', (_, ...args: Parameters<DeleteChromeProfile>) => {
+    return DeleteUserProfileFromExcelFile(...args)
+    // return deleteUserChromeProfile(...args)
+  })
+  ipcMain.handle(
+    'deleteMultipleUserChromeProfile',
+    (_, ...args: Parameters<DeleteMultipleChromeProfile>) => {
+      console.log('CALL THIS !!!')
+      return DeleteMultipleUserProfileFromExcelFile(...args)
+    }
+  )
 
   createWindow()
 

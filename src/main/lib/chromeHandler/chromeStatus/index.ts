@@ -5,6 +5,7 @@ import { Options } from 'selenium-webdriver/chrome'
 import { Builder, WebDriver } from 'selenium-webdriver'
 
 import { UserProfileType } from '@shared/models'
+import { GetAllUserProfileFromExcelFile } from '@/lib/excelHandler'
 interface CustomInterfaceDriver {
   profileName: string
   webDriver: WebDriver
@@ -63,15 +64,30 @@ export const openChromeWithMultipleProfile = async (profiles: UserProfileType[])
     // const options
     let profilesOpen: UserProfileType[] = []
 
+    let screenWidth = 1920
+    let screenHeight = 1080
+
+    let cols = 4
+    let rows = 2
+    let gap = 20
+
     for (let profile of profiles) {
-      if (!drivers.some((driver) => driver.profileName == profile.profileName)) {
+      if (
+        !drivers.some((driver) => driver.profileName == profile.profileName && !profile.isRunning)
+      ) {
         let options = new Options()
         options.addArguments(
           '--use-gl=swiftshader' // Sử dụng phần mềm SwiftShader thay vì phần cứng GPU
         )
+
+        let dimenstions = profile.screen.split('x')
+        let width = dimenstions[0]
+        let height = dimenstions[1]
+
         options.addArguments(`--user-data-dir=${profile.pathSave}`)
         options.addArguments(`--user-agent=${profile.userAgent}`)
-        options.addArguments('window-size=400,400') // Đặt kích thước cửa sổ 400x400
+        // options.addArguments(`window-size=50,${height}`)
+
         let driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build()
         drivers.push({
           profileName: profile.profileName,
@@ -80,6 +96,27 @@ export const openChromeWithMultipleProfile = async (profiles: UserProfileType[])
         profile.isRunning = true
         profilesOpen.push(profile)
         await driver.get(profile.startURL != '' ? profile.startURL : 'https://google.com')
+
+        let windowWidth = screenWidth / cols
+
+        let windowHeight = screenHeight / rows
+
+        let index = profilesOpen.indexOf(profile)
+        let row = Math.floor(index / cols)
+
+        let col = index % cols
+
+        let xPOS = col * windowWidth
+
+        let yPOS = row * windowHeight + gap / 2
+
+        await driver.manage().window().setRect({
+          width: windowWidth,
+          height: windowHeight,
+          x: xPOS,
+          y: yPOS
+        })
+
         // await driver.wait(() => false)
       }
     }
@@ -98,7 +135,11 @@ export const openChromeProfile = async (profile: UserProfileType) => {
     )
     options.addArguments(`--user-data-dir=${profile.pathSave}`)
     options.addArguments(`--user-agent=${profile.userAgent}`)
-    options.addArguments('window-size=400,400') // Đặt kích thước cửa sổ 400x400
+    let dimenstions = profile.screen.split('x')
+    let width = dimenstions[0]
+    let height = dimenstions[1]
+
+    options.addArguments(`window-size=${width},${height}`) // Đặt kích thước cửa sổ 400x400
     let driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build()
     drivers.push({
       profileName: profile.profileName,

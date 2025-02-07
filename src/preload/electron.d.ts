@@ -2,6 +2,8 @@ import { ElectronAPI } from '@electron-toolkit/preload'
 import {
   CloseChromeWithMultipleProfile,
   CloseChromeWithProfile,
+  DeleteChromeProfile,
+  DeleteMultipleChromeProfile,
   OpenChromeWithMultipleProfile,
   OpenChromeWithProfile,
   ReadChromeProfilesFromExcelFile,
@@ -23,6 +25,8 @@ declare global {
       closeChromeWithMultipleProfile: CloseChromeWithMultipleProfile
       saveUserProfile: SaveChromeProfile
       readChromeProfilesFromExcel: ReadChromeProfilesFromExcelFile
+      deleteUserChromeProfile: DeleteChromeProfile
+      deleteMultipleUserChromeProfile: DeleteMultipleChromeProfile
     }
   }
 }

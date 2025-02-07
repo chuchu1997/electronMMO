@@ -7,13 +7,16 @@ import {
 } from '../../components'
 import { useStoreCallback } from '../../redux/callback'
 import { CustomToast } from '../../toast'
+import { generateIDFromUUID } from '../../utils'
 
 export const CreateProfileChromeView = () => {
   const {
     createUserProfileStateSelector,
     onDispatchUpdateCreateUserProfile,
     onResetBrowserProfile,
-    onRandomUserAgent
+    onRandomUserAgent,
+    onDispatchUpdateChromeStateFromProfile,
+    chromeProfileStateSelector
   } = useStoreCallback()
 
   return (
@@ -41,17 +44,26 @@ export const CreateProfileChromeView = () => {
             <ActionButton
               className="w-[200px]"
               onClick={async () => {
-                window.electron.saveUserProfile(createUserProfileStateSelector)
+                // createUserProfileStateSelector.
+                createUserProfileStateSelector.id = generateIDFromUUID()
                 const result = await window.electron.saveUserProfile(createUserProfileStateSelector)
-                console.log('CALL NE')
                 if (result.success) {
                   CustomToast.success({ message: 'Tạo user profile thành công ' })
+                  // onDispatchUpdateChromeStateFromProfile()
+                  onDispatchUpdateChromeStateFromProfile([
+                    ...chromeProfileStateSelector,
+                    result.profileCreated
+                  ])
 
-                  onResetBrowserProfile()
                   setTimeout(() => {
-                    //ADD DELAY
-                    onRandomUserAgent()
-                  }, 1000)
+                    onResetBrowserProfile()
+                  }, 500)
+
+                  onRandomUserAgent()
+                  // setTimeout(() => {
+                  //   //ADD DELAY
+                  //   onRandomUserAgent()
+                  // }, 1000)
                 } else {
                   CustomToast.error({ message: result.message })
                 }

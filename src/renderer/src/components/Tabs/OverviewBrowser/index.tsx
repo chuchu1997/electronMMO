@@ -1,10 +1,11 @@
 import { InputComponent } from '../../Input'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { DropdownButton } from '../../DropdownButton'
 import { DropdownMenu } from '../../DropdownButton/DropdownMenu'
 import { useStoreCallback } from '../../../redux/callback'
 import { VersionType } from '@shared/models'
 import { CustomToast } from '../../../toast'
+import { ActionButton } from '../../Button'
 export const OverViewBrowser = () => {
   const screenResolutions = ['125x125', '1024x768', '1920x1080']
 
@@ -27,14 +28,16 @@ export const OverViewBrowser = () => {
       [name]: value
     })
   }
+  useEffect(() => {
+    if (createUserProfileStateSelector.userAgent == '') {
+      onRandomUserAgent()
+    }
+  }, [])
 
   const changeChromeVersionFromUserAgent = (version: VersionType) => {
-    console.log('HELL OWORLD')
     if (createUserProfileStateSelector.userAgent) {
-      console.log('MATCH')
       const regex = /Chrome\/(\d+\.\d+\.\d+\.\d+)/
       const match = createUserProfileStateSelector.userAgent.match(regex)
-      console.log('MATCH')
       if (match) {
         const chromeVersion = match[1] // Lấy giá trị phiên bản từ nhóm trong biểu thức chính quy
         console.log('Chrome version:', chromeVersion) // In ra phiên bản Chrome
@@ -44,7 +47,8 @@ export const OverViewBrowser = () => {
         )
         onDispatchUpdateCreateUserProfile({
           ...createUserProfileStateSelector,
-          version: version
+          version: version,
+          userAgent: newVersion
           // userAgent: newVersion
         })
       }
@@ -74,9 +78,14 @@ export const OverViewBrowser = () => {
   }
   return (
     <div className="flex flex-col gap-4">
-      <span>{createUserProfileStateSelector.version.toString()}</span>
       <section>
-        <DropdownButton title={createUserProfileStateSelector.version.toString()}>
+        <DropdownButton
+          title={
+            createUserProfileStateSelector.version != undefined
+              ? createUserProfileStateSelector.version.toString()
+              : 'Chọn Version'
+          }
+        >
           <DropdownMenu
             items={[
               ...chromeVersions.map((version) => {
@@ -98,9 +107,9 @@ export const OverViewBrowser = () => {
           value={createUserProfileStateSelector.userAgent}
           onChange={handleInputChange}
         />
-        <button className="btn btn-neutral absolute top-0 right-0" onClick={onRandomUserAgent}>
+        <ActionButton className="absolute top-0 right-0 h-full" onClick={onRandomUserAgent}>
           Random UserAgent
-        </button>
+        </ActionButton>
       </section>
       {/* ///SECTION 3 */}
       <section className="grid grid-cols-2 gap-4">
@@ -139,21 +148,13 @@ export const OverViewBrowser = () => {
         />
 
         <div className="relative">
-          <div className="absolute top-0 right-0 flex gap-1">
-            <button className="btn btn-neutral" onClick={() => onHandleBtnDelay('sub')}>
-              -
-            </button>
-            <button className="btn btn-neutral" onClick={() => onHandleBtnDelay('plus')}>
-              +
-            </button>
-          </div>
-
           <InputComponent
             type="number"
             placeholder="Delay mở (seconds)"
             name="delayOpenSeconds"
             value={createUserProfileStateSelector.delayOpenSeconds}
             onChange={handleInputChange}
+            // aria-controls=""
           ></InputComponent>
         </div>
       </section>

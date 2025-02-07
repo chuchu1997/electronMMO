@@ -11,8 +11,19 @@ export type CloseChromeWithMultipleProfile = (profiles: UserProfileType[]) => {
 }
 export type CloseChromeWithProfile = (profile: UserProfileType) => { isOpen; message }
 export type OpenChromeWithProfile = (profile: UserProfileType) => { isOpen; message }
-export type SaveChromeProfile = (userProfile: UserProfileType) => { success; message }
-
+export type SaveChromeProfile = (userProfile: UserProfileType) => {
+  success
+  message
+  profileCreated
+}
+export type DeleteChromeProfile = (userProfile: UserProfileType) => {
+  status
+  message
+}
+export type DeleteMultipleChromeProfile = (profiles: UserProfileType[]) => {
+  status
+  message
+}
 export type ReadChromeProfilesFromExcelFile = () => { profiles: UserProfileType[]; status }
 
 /// CUSTOM

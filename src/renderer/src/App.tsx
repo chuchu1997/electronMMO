@@ -3,7 +3,7 @@ import { Content, RootLayout, SideBar, DraggableTopBar, ActionButton } from './c
 
 // import {current}
 
-import { DashboardView, CreateProfileChromeView, ManageChromeProfiles } from './views'
+import { DashboardView, CreateProfileChromeView, ManageChromeProfiles, ProxyView } from './views'
 
 // import {} from "@/"
 
@@ -18,7 +18,7 @@ function App(): JSX.Element {
       case 'create-profile':
         return <CreateProfileChromeView />
       case 'manage-proxy':
-        return <>THIS IS MANAGE PROXY</>
+        return <ProxyView />
       case 'manage-profile':
         return <ManageChromeProfiles />
       default:

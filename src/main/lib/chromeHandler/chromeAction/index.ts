@@ -25,3 +25,24 @@ export const saveProfileChrome = async (userProfile: UserProfileType) => {
     console.log('err', err)
   }
 }
+
+export const DeleteProfileChromeFolder = async (userProfile: UserProfileType) => {
+  const profileDir = path.join(__dirname, `../../chromeProfile/${userProfile.profileName}`)
+
+  try {
+    fs.rmSync(profileDir, { recursive: true, force: true })
+  } catch (err) {
+    console.log('ERRR', err)
+  }
+  // }
+}
+export const DeleteMultipleProfileChromeFolder = async (profiles: UserProfileType[]) => {
+  try {
+    for (let profile of profiles) {
+      let profileDir = path.join(__dirname, `../../chromeProfile/${profile.profileName}`)
+      fs.rmSync(profileDir, { recursive: true, force: true })
+    }
+  } catch (err) {
+    console.log('ERR', err)
+  }
+}
