@@ -17,7 +17,7 @@ export const ManageChromeProfiles = () => {
 
   useEffect(() => {
     if (chromeProfileStateSelector) {
-      console.log('CHROME', chromeProfileStateSelector)
+      'CHROME', chromeProfileStateSelector
     }
   }, [chromeProfileStateSelector])
   // useEffect
@@ -303,7 +303,7 @@ export const ManageChromeProfiles = () => {
       {/* <div className="action-buttons">
         <ActionButton
           onClick={() => {
-            // console.log('PROFILES[0]', profiles[])
+            // ('PROFILES[0]', profiles[])
           }}
         >
           Tạo Chrome Profile
@@ -313,7 +313,7 @@ export const ManageChromeProfiles = () => {
       <div className="action-buttons">
         <ActionButton
           onClick={() => {
-            console.log('CHROME NE!!', chromeProfileStateSelector)
+            ('CHROME NE!!', chromeProfileStateSelector)
           }}
         >
           Kiem tra item

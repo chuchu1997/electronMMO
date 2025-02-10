@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { updateView, UpdateStateForChromeProfile, updateCreateUserProfile } from '../actions'
 
-import { RootState, UserProfileType } from '@shared/models'
+import { ManageView, RootState, UserProfileType } from '@shared/models'
 export const useStoreCallback = () => {
   const dispatch = useDispatch()
 
@@ -17,12 +17,10 @@ export const useStoreCallback = () => {
     dispatch(updateCreateUserProfile(profile))
   }
 
-  const onDispatchChangeView = (view: any) => {
-    dispatch(updateView({ view }))
+  const onDispatchChangeView = (view: ManageView) => {
+    dispatch(updateView(view))
   }
   const onDispatchUpdateChromeStateFromProfile = (profiles: UserProfileType[]) => {
-    console.log('PROFILES CALLED !!!', profiles)
-
     dispatch(
       // UpdateStateForChromeProfile({
       //  [...profiles]
@@ -71,7 +69,7 @@ export const useStoreCallback = () => {
         audioContext: 'off',
         fonts: 'off',
         proxy: {
-          proxyType: 'HTTP Proxy',
+          proxyType: 'http-proxy',
           proxyIP: '',
           port: 0,
           username: '',

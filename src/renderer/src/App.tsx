@@ -12,7 +12,7 @@ import { RootState } from '@shared/models'
 function App(): JSX.Element {
   // const renderView = useSelector((state: any) => state.view)
   let renderView = useSelector((state: RootState) => {
-    switch (state.currentView.view) {
+    switch (state.currentView) {
       case 'dashboard':
         return <DashboardView />
       case 'create-profile':

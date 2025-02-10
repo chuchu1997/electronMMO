@@ -21,9 +21,7 @@ export const ProxyView = () => {
     password: '',
     port: 0
   })
-  const onCreateProxy = () => {
-    console.log('CREATE PROXY !!', proxy)
-  }
+  const onCreateProxy = () => {}
   const onFormInputChange = (event) => {
     const { name, value } = event.target
 

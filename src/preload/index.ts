@@ -33,5 +33,5 @@ try {
     }
   })
 } catch (err) {
-  console.log(err)
+  err
 }

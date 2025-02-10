@@ -22,7 +22,7 @@ export const saveProfileChrome = async (userProfile: UserProfileType) => {
     }
     return profileDir
   } catch (err) {
-    console.log('err', err)
+    'err', err
   }
 }
 
@@ -32,7 +32,7 @@ export const DeleteProfileChromeFolder = async (userProfile: UserProfileType) =>
   try {
     fs.rmSync(profileDir, { recursive: true, force: true })
   } catch (err) {
-    console.log('ERRR', err)
+    'ERRR', err
   }
   // }
 }
@@ -43,6 +43,6 @@ export const DeleteMultipleProfileChromeFolder = async (profiles: UserProfileTyp
       fs.rmSync(profileDir, { recursive: true, force: true })
     }
   } catch (err) {
-    console.log('ERR', err)
+    'ERR', err
   }
 }

@@ -14,21 +14,39 @@ export const RootLayout = ({ className, children, ...props }: ComponentProps<'ma
 
 export const SideBar = ({ className, ...props }: ComponentProps<'aside'>) => {
   const { onDispatchChangeView } = useStoreCallback()
-
+  const ChromeFeatures = () => (
+    <div className="collapse bg-accent rounded-md text-white ">
+      <input type="checkbox" />
+      <div className="collapse-title ">Tools Chrome</div>
+      <div className="collapse-content">
+        <div>
+          <SidebarButton
+            title="Tạo mới Profile"
+            icon={<LuPlus />}
+            onClick={() => onDispatchChangeView('create-profile')}
+          ></SidebarButton>
+          <SidebarButton
+            title="Quản lý profiles"
+            icon={<LuUser />}
+            onClick={() => onDispatchChangeView('manage-profile')}
+          ></SidebarButton>
+        </div>
+      </div>
+    </div>
+  )
   return (
-    <aside className={twMerge('w-[200px] h-[100vh +10px] overflow-auto', className)} {...props}>
-      <header className="p-4 mb-4">Nguyen Cuong Tool</header>
+    <aside className={twMerge('w-[280px] h-[100vh +10px] overflow-auto', className)} {...props}>
+      <header className="p-4 mb-4">
+        <h3 className="text-2xl text-gray-900 font-bold text-center tracking-tight italic ">
+          NC Tools
+        </h3>
+      </header>
       <div className="flex flex-col gap-4 ">
+        <ChromeFeatures />
         <SidebarButton
-          title="Tạo mới profile"
+          title="Dashboard"
           icon={<LuPlus />}
-          onClick={() => onDispatchChangeView('create-profile')}
-        ></SidebarButton>
-
-        <SidebarButton
-          title="Quản lý profile"
-          icon={<LuUser />}
-          onClick={() => onDispatchChangeView('manage-profile')}
+          onClick={() => onDispatchChangeView('dashboard')}
         ></SidebarButton>
 
         <SidebarButton
@@ -36,13 +54,6 @@ export const SideBar = ({ className, ...props }: ComponentProps<'aside'>) => {
           icon={<LuNetwork />}
           onClick={() => onDispatchChangeView('manage-proxy')}
         ></SidebarButton>
-        <ActionButton
-          onClick={() => {
-            // handleChangeView({ view: 'home' })
-          }}
-        >
-          HUHU
-        </ActionButton>
       </div>
     </aside>
   )

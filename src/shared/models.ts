@@ -13,9 +13,7 @@ export type ChromeProfile = {
 }
 
 export type RootState = ReturnType<typeof rootReducer>
-export type ManageView = {
-  view: 'create-profile' | 'manage-profile' | 'dashboard'
-}
+export type ManageView = 'create-profile' | 'manage-profile' | 'dashboard' | 'manage-proxy'
 
 export type ProxyType = {
   proxyType: 'reverse-proxy' | 'proxy-v4' | 'http-proxy'

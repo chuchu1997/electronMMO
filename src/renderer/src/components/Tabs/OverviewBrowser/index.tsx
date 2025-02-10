@@ -39,8 +39,11 @@ export const OverViewBrowser = () => {
       const regex = /Chrome\/(\d+\.\d+\.\d+\.\d+)/
       const match = createUserProfileStateSelector.userAgent.match(regex)
       if (match) {
-        const chromeVersion = match[1] // Lấy giá trị phiên bản từ nhóm trong biểu thức chính quy
-        console.log('Chrome version:', chromeVersion) // In ra phiên bản Chrome
+        const chromeVersion = match[1](
+          // Lấy giá trị phiên bản từ nhóm trong biểu thức chính quy
+          'Chrome version:',
+          chromeVersion
+        ) // In ra phiên bản Chrome
         let newVersion = createUserProfileStateSelector.userAgent.replace(
           `Chrome/${chromeVersion}`,
           `Chrome/${version}.0.0.0`

@@ -126,7 +126,7 @@ app.whenReady().then(() => {
   })
 
   // IPC test
-  ipcMain.on('ping', () => console.log('ping'))
+  ipcMain.on('ping', () => 'ping')
 
   ipcMain.handle('saveProxys', async (_, proxyInfo: any) => {
     //HANDLE FOR PROXY !!!
@@ -147,9 +147,9 @@ app.whenReady().then(() => {
   //       // Nếu file tồn tại, đọc file Excel hiện tại
   //       wb = XLSX.readFile(excelFilePath)
   //       ws = wb.Sheets['Profiles']
-  //       console.log('FILE EXCEL DA CO !!')
+  //       ('FILE EXCEL DA CO !!')
   //     } else {
-  //       console.log('khongh co file !!')
+  //       ('khongh co file !!')
   //       return { profiles: null, status: 404 }
   //     }
 
@@ -195,7 +195,7 @@ app.whenReady().then(() => {
   ipcMain.handle(
     'deleteMultipleUserChromeProfile',
     (_, ...args: Parameters<DeleteMultipleChromeProfile>) => {
-      console.log('CALL THIS !!!')
+      ;('CALL THIS !!!')
       return DeleteMultipleUserProfileFromExcelFile(...args)
     }
   )

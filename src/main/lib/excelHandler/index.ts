@@ -27,7 +27,7 @@ export const ReadAndGetUserProfilesFromExcel = (excelPath: string, sheet: string
 }
 
 export const GetAllUserProfileFromExcelFile = () => {
-  console.log('CALL THIS !!')
+  ;('CALL THIS !!')
   const directory = path.join(__dirname, '../../db')
   const excelPath = path.join(directory, 'information.xlsx')
 
@@ -37,7 +37,7 @@ export const GetAllUserProfileFromExcelFile = () => {
   }
 }
 export const DeleteMultipleUserProfileFromExcelFile = async (profiles: UserProfileType[]) => {
-  console.log('CALL VAO DAY NAY ~~')
+  ;('CALL VAO DAY NAY ~~')
   try {
     const directory = path.join(__dirname, '../../db')
     const excelPath = path.join(directory, 'information.xlsx')
@@ -131,7 +131,7 @@ export const CreateExcelFile = (sheet: string, fileName: string, folderPath?: st
 
     return excelPath
   } catch (err) {
-    console.log('Có lỗi xảy ra ', err)
+    'Có lỗi xảy ra ', err
     return err
   }
 }
