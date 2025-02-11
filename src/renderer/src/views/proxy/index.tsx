@@ -21,7 +21,9 @@ export const ProxyView = () => {
     password: '',
     port: 0
   })
-  const onCreateProxy = () => {}
+  const onCreateProxy = async () => {
+    await window.electron.onCreateProxy(proxy)
+  }
   const onFormInputChange = (event) => {
     const { name, value } = event.target
 

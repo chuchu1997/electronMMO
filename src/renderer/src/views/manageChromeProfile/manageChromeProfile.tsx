@@ -17,7 +17,6 @@ export const ManageChromeProfiles = () => {
 
   useEffect(() => {
     if (chromeProfileStateSelector) {
-      'CHROME', chromeProfileStateSelector
     }
   }, [chromeProfileStateSelector])
   // useEffect

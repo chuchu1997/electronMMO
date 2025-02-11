@@ -1,7 +1,7 @@
 import { ComponentProps, forwardRef } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { ActionButton, SidebarButton } from './Button'
-import { LuNetwork, LuPlus, LuUser } from 'react-icons/lu'
+import { LuNetwork, LuPlus, LuUser, LuLayoutDashboard } from 'react-icons/lu'
 import { useStoreCallback } from '../redux/callback'
 
 export const RootLayout = ({ className, children, ...props }: ComponentProps<'main'>) => {
@@ -45,7 +45,7 @@ export const SideBar = ({ className, ...props }: ComponentProps<'aside'>) => {
         <ChromeFeatures />
         <SidebarButton
           title="Dashboard"
-          icon={<LuPlus />}
+          icon={<LuLayoutDashboard />}
           onClick={() => onDispatchChangeView('dashboard')}
         ></SidebarButton>
 

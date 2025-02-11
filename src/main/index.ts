@@ -12,7 +12,9 @@ import {
   WriteUserProfileToExcelFile,
   GetAllUserProfileFromExcelFile,
   DeleteUserProfileFromExcelFile,
-  DeleteMultipleUserProfileFromExcelFile
+  DeleteMultipleUserProfileFromExcelFile,
+  OnCreateProxyHandler,
+  OnDeleteProxyHandler
 } from './lib'
 import { Builder, Capabilities, WebDriver } from 'selenium-webdriver'
 import 'chromedriver'
@@ -39,6 +41,8 @@ import {
   CloseChromeWithProfile,
   DeleteChromeProfile,
   DeleteMultipleChromeProfile,
+  OnCreateProxy,
+  OnDeleteProxy,
   OpenChromeWithMultipleProfile,
   OpenChromeWithProfile,
   ReadChromeProfilesFromExcelFile,
@@ -128,10 +132,6 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => 'ping')
 
-  ipcMain.handle('saveProxys', async (_, proxyInfo: any) => {
-    //HANDLE FOR PROXY !!!
-  })
-
   // ipcMain.handle('readChromeProfilesFromExcel', async () => {
   //   let wb
   //   let ws
@@ -195,10 +195,16 @@ app.whenReady().then(() => {
   ipcMain.handle(
     'deleteMultipleUserChromeProfile',
     (_, ...args: Parameters<DeleteMultipleChromeProfile>) => {
-      ;('CALL THIS !!!')
       return DeleteMultipleUserProfileFromExcelFile(...args)
     }
   )
+  // HANDLE PROXY !!!
+  ipcMain.handle('onCreateProxy', (_, ...args: Parameters<OnCreateProxy>) => {
+    return OnCreateProxyHandler(...args)
+  })
+  ipcMain.handle('onDeleteProxy', (_, ...args: Parameters<OnDeleteProxy>) => {
+    return OnDeleteProxyHandler(...args)
+  })
 
   createWindow()
 

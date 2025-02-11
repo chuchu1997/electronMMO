@@ -27,7 +27,6 @@ export const ReadAndGetUserProfilesFromExcel = (excelPath: string, sheet: string
 }
 
 export const GetAllUserProfileFromExcelFile = () => {
-  ;('CALL THIS !!')
   const directory = path.join(__dirname, '../../db')
   const excelPath = path.join(directory, 'information.xlsx')
 
@@ -37,7 +36,6 @@ export const GetAllUserProfileFromExcelFile = () => {
   }
 }
 export const DeleteMultipleUserProfileFromExcelFile = async (profiles: UserProfileType[]) => {
-  ;('CALL VAO DAY NAY ~~')
   try {
     const directory = path.join(__dirname, '../../db')
     const excelPath = path.join(directory, 'information.xlsx')
@@ -101,6 +99,7 @@ export const WriteUserProfileToExcelFile = async (sheet: string, profile: UserPr
       let data: UserProfileType[] = result.data
       data.push({ ...profile, pathSave: pathProfile })
       ws = XLSX.utils.json_to_sheet(data)
+
       wb.Sheets[sheet] = ws
       XLSX.writeFile(wb, excelPath)
 
@@ -131,7 +130,7 @@ export const CreateExcelFile = (sheet: string, fileName: string, folderPath?: st
 
     return excelPath
   } catch (err) {
-    'Có lỗi xảy ra ', err
+    console.log('ERR', err)
     return err
   }
 }

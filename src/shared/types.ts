@@ -1,4 +1,4 @@
-import { UserProfileType } from './models'
+import { ProxyType, UserProfileType } from './models'
 
 ///SHARE fOLDER (Dùng để define các hàm , mã nguồn chia sẽ dùng chung giữa Main và Render Process !!!)
 export type OpenChromeWithMultipleProfile = (profiles: UserProfileType[]) => {
@@ -26,4 +26,16 @@ export type DeleteMultipleChromeProfile = (profiles: UserProfileType[]) => {
 }
 export type ReadChromeProfilesFromExcelFile = () => { profiles: UserProfileType[]; status }
 
-/// CUSTOM
+//PROXY HANDLER
+export type OnReadAllProxy = () => {}
+export type OnCreateProxy = (proxyInfo: ProxyType) => {
+  status
+  message
+  proxys
+}
+export type OnUpdateProxy = (proxyInfo: ProxyType) => {}
+export type OnDeleteProxy = (idProxy: string) => {
+  status
+  message
+}
+//PROXY HANDLER

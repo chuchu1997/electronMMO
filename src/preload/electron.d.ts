@@ -4,6 +4,9 @@ import {
   CloseChromeWithProfile,
   DeleteChromeProfile,
   DeleteMultipleChromeProfile,
+  OnCreateProxy,
+  OnDeleteProxy,
+  OnUpdateProxy,
   OpenChromeWithMultipleProfile,
   OpenChromeWithProfile,
   ReadChromeProfilesFromExcelFile,
@@ -27,6 +30,10 @@ declare global {
       readChromeProfilesFromExcel: ReadChromeProfilesFromExcelFile
       deleteUserChromeProfile: DeleteChromeProfile
       deleteMultipleUserChromeProfile: DeleteMultipleChromeProfile
+      //
+      onCreateProxy: OnCreateProxy
+      onUpdateProxy: OnUpdateProxy
+      onDeleteProxy: OnDeleteProxy
     }
   }
 }

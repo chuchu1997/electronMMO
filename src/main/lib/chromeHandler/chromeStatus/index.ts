@@ -151,7 +151,7 @@ export const openChromeProfile = async (profile: UserProfileType) => {
 
     return { isOpen: true, message: 'Mở Chrome Thành Công' }
   } catch (err) {
-    'ERR', err
+    console.log('ERR', err)
     return { isOpen: false, message: 'Mở Chrome Thất Bại' }
   }
 }

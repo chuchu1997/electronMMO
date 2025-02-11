@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import { UserProfileType } from '@shared/models'
+import { ProxyType, UserProfileType } from '@shared/models'
 
 if (!process.contextIsolated) {
   throw new Error('contextIsolate must be enabled in the BrowserWindow')
@@ -30,6 +30,14 @@ try {
     },
     deleteMultipleUserChromeProfile: async (profiles: UserProfileType[]) => {
       return await ipcRenderer.invoke('deleteMultipleUserChromeProfile', profiles)
+    },
+    /// Proxy Handler
+    onCreateProxy: async (proxyInfo: ProxyType) => {
+      return await ipcRenderer.invoke('onCreateProxy', proxyInfo)
+      // return proxyInfo
+    },
+    onDeleteProxy: async (id: string) => {
+      return await ipcRenderer.invoke('onDeleteProxy', id)
     }
   })
 } catch (err) {
